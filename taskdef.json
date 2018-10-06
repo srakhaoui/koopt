@@ -2,7 +2,7 @@
     "family": "coopt-it",
     "containerDefinitions": [
         {
-            "image": "%REPOSITORY_URI%:v_%BUILD_NUMBER%",
+            "image": "coopt-it:v_%BUILD_NUMBER%",
             "name": "coopt-it",
             "cpu": 1,
             "memory": 256,

@@ -1,26 +1,25 @@
 node {    
-    stage('Checkout'){
-        git branch: 'master',
-            credentialsId: 'Harington-GitHub-jenkins-account',
-            url:'https://github.com/Harington-Technologies/coopt-it'
-    }
-        
 
-    stage 'Docker build'
-    docker.build('coopt-it')
-
-    stage 'Docker push'
-    docker.withRegistry('http://549988814439.dkr.ecr.eu-west-1.amazonaws.com', 'ecr:eu-west-1:coopt-it-aws-access-key') {
-        docker.image('coopt-it').push('latest')
-    }
+	def imageName = 'coopt-it'
+	def imageTag = "v_${BUILD_NUMBER}"
+	
+    stage('Docker build'){
+		docker.build(imageName)
+	}
+	
+    stage('Docker push'){
+		docker.withRegistry('http://549988814439.dkr.ecr.eu-west-1.amazonaws.com', 'ecr:eu-west-1:coopt-it-aws-access-key') {
+			docker.image(imageName).push(imageTag)
+		}
+	}
     
     stage 'Integration'
     sh '''
         REGION=eu-west-1
         REPOSITORY_NAME=coopt-it
         CLUSTER=CooptItCluster
-        FAMILY=`sed -n 's/.*"family": "\\(.*\\)",/\1/p' taskdef.json`
-        NAME=`sed -n 's/.*"name": "\\(.*\\)",/\1/p' taskdef.json`
+        FAMILY=`cat taskdef.json | jq .family | tr -d '"'`
+        NAME=`cat taskdef.json | jq .containerDefinitions[].name | tr -d '"'`
         SERVICE_NAME=${NAME}-service
 
         #Store the repositoryUri as a variable
