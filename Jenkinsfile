@@ -1,5 +1,6 @@
 node {    
-
+    checkout scm
+    
 	def imageName = 'coopt-it'
 	def imageTag = "v_${BUILD_NUMBER}"
 	
