@@ -21,7 +21,7 @@ node {
         CLUSTER=CooptItCluster
         FAMILY=`cat taskdef.json | jq .family | tr -d '"'`
         NAME=`cat taskdef.json | jq .containerDefinitions[].name | tr -d '"'`
-        SERVICE_NAME=${NAME}-service
+        SERVICE_NAME=${NAME}_service
 
         #Store the repositoryUri as a variable
         REPOSITORY_URI=`aws ecr describe-repositories --repository-names ${REPOSITORY_NAME} --region ${REGION} | jq .repositories[].repositoryUri | tr -d '"'`
