@@ -1,3 +1,1 @@
-<?php 
-phpinfo();
-# Simple commit
+<?php phpinfo();
