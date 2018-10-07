@@ -3,13 +3,15 @@ node {
     
 	def imageName = 'coopt-it'
 	def imageTag = "v_${BUILD_NUMBER}"
+	def repositoryName = env.COOPT_IT_ECR_REGISTRY
+	def region = env.COOPT_IT_REGION
 	
     stage('Docker build'){
 		docker.build(imageName)
 	}
 	
     stage('Docker push'){
-		docker.withRegistry('http://549988814439.dkr.ecr.eu-west-1.amazonaws.com', 'ecr:eu-west-1:coopt-it-aws-access-key') {
+		docker.withRegistry(repositoryName, "ecr:${region}:coopt-it-aws-access-key") {
 			docker.image(imageName).push(imageTag)
 		}
 	}
