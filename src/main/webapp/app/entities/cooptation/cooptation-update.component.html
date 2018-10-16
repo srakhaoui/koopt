@@ -1,0 +1,55 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-cooptation-heading">Create or edit a Cooptation</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!cooptation.id">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="cooptation.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_profile">Profile</label>
+                    <input type="text" class="form-control" name="profile" id="field_profile"
+                        [(ngModel)]="cooptation.profile" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_skills">Skills</label>
+                    <input type="text" class="form-control" name="skills" id="field_skills"
+                        [(ngModel)]="cooptation.skills" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_performedOn">Performed On</label>
+                    <div class="d-flex">
+                        <input id="field_performedOn" type="datetime-local" class="form-control" name="performedOn" [(ngModel)]="performedOn"
+                        />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_coopter">Coopter</label>
+                    <select class="form-control" id="field_coopter" name="coopter" [(ngModel)]="cooptation.coopter" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="coopterOption.id === cooptation.coopter?.id ? cooptation.coopter : coopterOption" *ngFor="let coopterOption of coopters; trackBy: trackCoopterById">{{coopterOption.id}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_coopted">Coopted</label>
+                    <select class="form-control" id="field_coopted" name="coopted" [(ngModel)]="cooptation.coopted" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="cooptedOption.id === cooptation.coopted?.id ? cooptation.coopted : cooptedOption" *ngFor="let cooptedOption of coopteds; trackBy: trackCooptedById">{{cooptedOption.id}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

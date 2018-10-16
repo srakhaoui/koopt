@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <!--
+        Added the constraints for entity Cooptation.
+    -->
+    <changeSet id="20181016213134-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="coopter_id"
+                                 baseTableName="cooptation"
+                                 constraintName="fk_cooptation_coopter_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="coopter"/>
+
+        <addForeignKeyConstraint baseColumnNames="coopted_id"
+                                 baseTableName="cooptation"
+                                 constraintName="fk_cooptation_coopted_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="coopted"/>
+
+    </changeSet>
+</databaseChangeLog>

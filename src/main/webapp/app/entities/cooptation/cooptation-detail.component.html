@@ -1,0 +1,47 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="cooptation">
+            <h2><span>Cooptation</span> {{cooptation.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Profile</span></dt>
+                <dd>
+                    <span>{{cooptation.profile}}</span>
+                </dd>
+                <dt><span>Skills</span></dt>
+                <dd>
+                    <span>{{cooptation.skills}}</span>
+                </dd>
+                <dt><span>Performed On</span></dt>
+                <dd>
+                    <span>{{cooptation.performedOn}}</span>
+                </dd>
+                <dt><span>Coopter</span></dt>
+                <dd>
+                    <div *ngIf="cooptation.coopter">
+                        <a [routerLink]="['/coopter', cooptation.coopter?.id, 'view']">{{cooptation.coopter?.id}}</a>
+                    </div>
+                </dd>
+                <dt><span>Coopted</span></dt>
+                <dd>
+                    <div *ngIf="cooptation.coopted">
+                        <a [routerLink]="['/coopted', cooptation.coopted?.id, 'view']">{{cooptation.coopted?.id}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/cooptation', cooptation.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

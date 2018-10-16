@@ -1,0 +1,40 @@
+{
+    "name": "Cooptation",
+    "fields": [
+        {
+            "fieldName": "profile",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "skills",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "performedOn",
+            "fieldType": "Instant"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "coopter",
+            "otherEntityName": "coopter",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "coopted",
+            "otherEntityName": "coopted",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20181016213134",
+    "entityTableName": "cooptation",
+    "dto": "no",
+    "pagination": "infinite-scroll",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

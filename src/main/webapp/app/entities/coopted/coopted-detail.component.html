@@ -1,0 +1,35 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="coopted">
+            <h2><span>Coopted</span> {{coopted.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Phone Number</span></dt>
+                <dd>
+                    <span>{{coopted.phoneNumber}}</span>
+                </dd>
+                <dt><span>Linked In</span></dt>
+                <dd>
+                    <span>{{coopted.linkedIn}}</span>
+                </dd>
+                <dt><span>User</span></dt>
+                <dd>
+                    {{coopted.user?.id}}
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/coopted', coopted.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>
