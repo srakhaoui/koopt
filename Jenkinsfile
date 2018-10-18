@@ -6,6 +6,8 @@ node {
     }
 
     stage('check java') {
+        env.JAVA_HOME="${tool 'JDK_8'}"
+        env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
         sh "java -version"
     }
 
