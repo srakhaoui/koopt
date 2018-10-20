@@ -474,6 +474,7 @@
                                     <filtering>true</filtering>
                                     <includes>
                                         <include>config/*.yml</include>
+                                        <include>logback-spring.xml</include>
                                     </includes>
                                 </resource>
                                 <resource>
