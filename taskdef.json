@@ -6,7 +6,13 @@
             "name": "coopt-it",
             "cpu": 1,
             "memory": 1280,
-            "essential": true
+            "essential": true,
+            "portMappings": [
+                {
+                    "containerPort": 8080,
+                    "hostPort": 8080
+                }
+            ]
         }
     ]
 }
