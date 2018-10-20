@@ -88,6 +88,8 @@ node {
         #Get latest revision
         REVISION=`aws ecs describe-task-definition --task-definition ${NAME} --region ${REGION} | jq .taskDefinition.revision`
 
+        #Stop running task(s)
+        aws ecs list-tasks --cluster ${CLUSTER} --service ${SERVICE_NAME} | jq .taskArns[] | while read line ; do aws ecs stop-task --cluster ${CLUSTER} --task $line ; done
         #Create or update service
         if [ "$SERVICES_FAILURES" == "" -a "$SERVICES_STATUS" == "ACTIVE" ]; then
             echo "entered existing service"
