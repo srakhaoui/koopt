@@ -482,6 +482,7 @@
                                     <filtering>false</filtering>
                                     <excludes>
                                         <exclude>config/*.yml</exclude>
+                                        <exclude>logback-spring.xml</exclude>
                                     </excludes>
                                 </resource>
                             </resources>
