@@ -88,14 +88,20 @@ public class CooptationResource {
      * GET  /cooptations : get all the cooptations.
      *
      * @param pageable the pagination information
+     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many)
      * @return the ResponseEntity with status 200 (OK) and the list of cooptations in body
      */
     @GetMapping("/cooptations")
     @Timed
-    public ResponseEntity<List<Cooptation>> getAllCooptations(Pageable pageable) {
+    public ResponseEntity<List<Cooptation>> getAllCooptations(Pageable pageable, @RequestParam(required = false, defaultValue = "false") boolean eagerload) {
         log.debug("REST request to get a page of Cooptations");
-        Page<Cooptation> page = cooptationService.findAll(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/cooptations");
+        Page<Cooptation> page;
+        if (eagerload) {
+            page = cooptationService.findAllWithEagerRelationships(pageable);
+        } else {
+            page = cooptationService.findAll(pageable);
+        }
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, String.format("/api/cooptations?eagerload=%b", eagerload));
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 

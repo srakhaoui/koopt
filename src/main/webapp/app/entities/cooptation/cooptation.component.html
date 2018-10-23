@@ -32,8 +32,8 @@
             <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="profile"><span>Profile</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="performedOn"><span>Performed On</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="coopter.id"><span>Coopter</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="coopted.id"><span>Coopted</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="coopter.id"><span>Coopter</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
@@ -43,13 +43,13 @@
                 <td>{{cooptation.profile}}</td>
                 <td>{{cooptation.performedOn | date:'medium'}}</td>
                 <td>
-                    <div *ngIf="cooptation.coopter">
-                        <a [routerLink]="['../coopter', cooptation.coopter?.id, 'view' ]" >{{cooptation.coopter?.id}}</a>
+                    <div *ngIf="cooptation.coopted">
+                        <a [routerLink]="['../coopted', cooptation.coopted?.id, 'view' ]" >{{cooptation.coopted?.id}}</a>
                     </div>
                 </td>
                 <td>
-                    <div *ngIf="cooptation.coopted">
-                        <a [routerLink]="['../coopted', cooptation.coopted?.id, 'view' ]" >{{cooptation.coopted?.id}}</a>
+                    <div *ngIf="cooptation.coopter">
+                        <a [routerLink]="['../coopter', cooptation.coopter?.id, 'view' ]" >{{cooptation.coopter?.id}}</a>
                     </div>
                 </td>
                 <td class="text-right">

@@ -12,9 +12,11 @@
     ],
     "relationships": [
         {
-            "relationshipType": "one-to-many",
-            "relationshipName": "skills",
-            "otherEntityName": "skill",
+            "relationshipType": "one-to-one",
+            "relationshipName": "coopted",
+            "otherEntityName": "coopted",
+            "otherEntityField": "id",
+            "ownerSide": true,
             "otherEntityRelationshipName": "cooptation"
         },
         {
@@ -24,10 +26,12 @@
             "otherEntityField": "id"
         },
         {
-            "relationshipType": "many-to-one",
-            "relationshipName": "coopted",
-            "otherEntityName": "coopted",
-            "otherEntityField": "id"
+            "relationshipType": "many-to-many",
+            "otherEntityRelationshipName": "",
+            "relationshipName": "skills",
+            "otherEntityName": "skill",
+            "otherEntityField": "id",
+            "ownerSide": true
         }
     ],
     "changelogDate": "20181016213134",

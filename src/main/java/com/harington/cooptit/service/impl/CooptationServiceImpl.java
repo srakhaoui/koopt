@@ -61,6 +61,15 @@ public class CooptationServiceImpl implements CooptationService {
         return cooptationRepository.findAll(pageable);
     }
 
+    /**
+     * Get all the Cooptation with eager load of many-to-many relationships.
+     *
+     * @return the list of entities
+     */
+    public Page<Cooptation> findAllWithEagerRelationships(Pageable pageable) {
+        return cooptationRepository.findAllWithEagerRelationships(pageable);
+    }
+    
 
     /**
      * Get one cooptation by id.
@@ -72,7 +81,7 @@ public class CooptationServiceImpl implements CooptationService {
     @Transactional(readOnly = true)
     public Optional<Cooptation> findOne(Long id) {
         log.debug("Request to get Cooptation : {}", id);
-        return cooptationRepository.findById(id);
+        return cooptationRepository.findOneWithEagerRelationships(id);
     }
 
     /**

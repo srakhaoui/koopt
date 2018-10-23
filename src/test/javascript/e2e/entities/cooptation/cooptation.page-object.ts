@@ -28,8 +28,9 @@ export class CooptationUpdatePage {
     cancelButton = element(by.id('cancel-save'));
     profileInput = element(by.id('field_profile'));
     performedOnInput = element(by.id('field_performedOn'));
-    coopterSelect = element(by.id('field_coopter'));
     cooptedSelect = element(by.id('field_coopted'));
+    coopterSelect = element(by.id('field_coopter'));
+    skillsSelect = element(by.id('field_skills'));
 
     async getPageTitle() {
         return this.pageTitle.getText();
@@ -51,6 +52,25 @@ export class CooptationUpdatePage {
         return this.performedOnInput.getAttribute('value');
     }
 
+    async cooptedSelectLastOption() {
+        await this.cooptedSelect
+            .all(by.tagName('option'))
+            .last()
+            .click();
+    }
+
+    async cooptedSelectOption(option) {
+        await this.cooptedSelect.sendKeys(option);
+    }
+
+    getCooptedSelect(): ElementFinder {
+        return this.cooptedSelect;
+    }
+
+    async getCooptedSelectedOption() {
+        return this.cooptedSelect.element(by.css('option:checked')).getText();
+    }
+
     async coopterSelectLastOption() {
         await this.coopterSelect
             .all(by.tagName('option'))
@@ -70,23 +90,23 @@ export class CooptationUpdatePage {
         return this.coopterSelect.element(by.css('option:checked')).getText();
     }
 
-    async cooptedSelectLastOption() {
-        await this.cooptedSelect
+    async skillsSelectLastOption() {
+        await this.skillsSelect
             .all(by.tagName('option'))
             .last()
             .click();
     }
 
-    async cooptedSelectOption(option) {
-        await this.cooptedSelect.sendKeys(option);
+    async skillsSelectOption(option) {
+        await this.skillsSelect.sendKeys(option);
     }
 
-    getCooptedSelect(): ElementFinder {
-        return this.cooptedSelect;
+    getSkillsSelect(): ElementFinder {
+        return this.skillsSelect;
     }
 
-    async getCooptedSelectedOption() {
-        return this.cooptedSelect.element(by.css('option:checked')).getText();
+    async getSkillsSelectedOption() {
+        return this.skillsSelect.element(by.css('option:checked')).getText();
     }
 
     async save() {

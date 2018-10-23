@@ -38,11 +38,7 @@ describe('Skill e2e test', () => {
         const nbButtonsBeforeCreate = await skillComponentsPage.countDeleteButtons();
 
         await skillComponentsPage.clickOnCreateButton();
-        await promise.all([
-            skillUpdatePage.setCodeInput('code'),
-            skillUpdatePage.setLabelInput('label'),
-            skillUpdatePage.cooptationSelectLastOption()
-        ]);
+        await promise.all([skillUpdatePage.setCodeInput('code'), skillUpdatePage.setLabelInput('label')]);
         expect(await skillUpdatePage.getCodeInput()).to.eq('code');
         expect(await skillUpdatePage.getLabelInput()).to.eq('label');
         await skillUpdatePage.save();

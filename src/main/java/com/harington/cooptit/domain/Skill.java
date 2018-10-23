@@ -1,6 +1,5 @@
 package com.harington.cooptit.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 
@@ -28,10 +27,6 @@ public class Skill implements Serializable {
 
     @Column(name = "jhi_label")
     private String label;
-
-    @ManyToOne
-    @JsonIgnoreProperties("skills")
-    private Cooptation cooptation;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -66,19 +61,6 @@ public class Skill implements Serializable {
 
     public void setLabel(String label) {
         this.label = label;
-    }
-
-    public Cooptation getCooptation() {
-        return cooptation;
-    }
-
-    public Skill cooptation(Cooptation cooptation) {
-        this.cooptation = cooptation;
-        return this;
-    }
-
-    public void setCooptation(Cooptation cooptation) {
-        this.cooptation = cooptation;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

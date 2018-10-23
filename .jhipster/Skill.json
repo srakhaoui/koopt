@@ -10,14 +10,7 @@
             "fieldType": "String"
         }
     ],
-    "relationships": [
-        {
-            "relationshipName": "cooptation",
-            "otherEntityName": "cooptation",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "id"
-        }
-    ],
+    "relationships": [],
     "changelogDate": "20181023193355",
     "entityTableName": "skill",
     "dto": "no",

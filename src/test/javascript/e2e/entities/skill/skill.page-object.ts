@@ -28,7 +28,6 @@ export class SkillUpdatePage {
     cancelButton = element(by.id('cancel-save'));
     codeInput = element(by.id('field_code'));
     labelInput = element(by.id('field_label'));
-    cooptationSelect = element(by.id('field_cooptation'));
 
     async getPageTitle() {
         return this.pageTitle.getText();
@@ -48,25 +47,6 @@ export class SkillUpdatePage {
 
     async getLabelInput() {
         return this.labelInput.getAttribute('value');
-    }
-
-    async cooptationSelectLastOption() {
-        await this.cooptationSelect
-            .all(by.tagName('option'))
-            .last()
-            .click();
-    }
-
-    async cooptationSelectOption(option) {
-        await this.cooptationSelect.sendKeys(option);
-    }
-
-    getCooptationSelect(): ElementFinder {
-        return this.cooptationSelect;
-    }
-
-    async getCooptationSelectedOption() {
-        return this.cooptationSelect.element(by.css('option:checked')).getText();
     }
 
     async save() {

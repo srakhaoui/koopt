@@ -11,6 +11,7 @@ import com.harington.cooptit.web.rest.errors.ExceptionTranslator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -56,7 +58,14 @@ public class CooptationResourceIntTest {
 
     @Autowired
     private CooptationRepository cooptationRepository;
+
+    @Mock
+    private CooptationRepository cooptationRepositoryMock;
     
+
+    @Mock
+    private CooptationService cooptationServiceMock;
+
     @Autowired
     private CooptationService cooptationService;
 
@@ -172,6 +181,37 @@ public class CooptationResourceIntTest {
             .andExpect(jsonPath("$.[*].performedOn").value(hasItem(DEFAULT_PERFORMED_ON.toString())));
     }
     
+    public void getAllCooptationsWithEagerRelationshipsIsEnabled() throws Exception {
+        CooptationResource cooptationResource = new CooptationResource(cooptationServiceMock);
+        when(cooptationServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        MockMvc restCooptationMockMvc = MockMvcBuilders.standaloneSetup(cooptationResource)
+            .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
+            .setMessageConverters(jacksonMessageConverter).build();
+
+        restCooptationMockMvc.perform(get("/api/cooptations?eagerload=true"))
+        .andExpect(status().isOk());
+
+        verify(cooptationServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
+    public void getAllCooptationsWithEagerRelationshipsIsNotEnabled() throws Exception {
+        CooptationResource cooptationResource = new CooptationResource(cooptationServiceMock);
+            when(cooptationServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+            MockMvc restCooptationMockMvc = MockMvcBuilders.standaloneSetup(cooptationResource)
+            .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
+            .setMessageConverters(jacksonMessageConverter).build();
+
+        restCooptationMockMvc.perform(get("/api/cooptations?eagerload=true"))
+        .andExpect(status().isOk());
+
+            verify(cooptationServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
     @Test
     @Transactional
     public void getCooptation() throws Exception {

@@ -28,18 +28,27 @@
             <column name="performed_on" type="datetime">
                 <constraints nullable="true" />
             </column>
-
-            <column name="coopter_id" type="bigint">
-                <constraints nullable="true" />
-            </column>
-
             <column name="coopted_id" type="bigint">
+                <constraints unique="true" nullable="true" uniqueConstraintName="ux_cooptation_coopted_id" />
+            </column>
+            <column name="coopter_id" type="bigint">
                 <constraints nullable="true" />
             </column>
 
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
         <dropDefaultValue tableName="cooptation" columnName="performed_on" columnDataType="datetime"/>
+        
+        <createTable tableName="cooptation_skills">
+            <column name="skills_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cooptations_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="cooptations_id, skills_id" tableName="cooptation_skills"/>
         
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->

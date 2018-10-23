@@ -13,17 +13,23 @@
                 <dd>
                     <span>{{cooptation.performedOn}}</span>
                 </dd>
+                <dt><span>Coopted</span></dt>
+                <dd>
+                    <div *ngIf="cooptation.coopted">
+                        <a [routerLink]="['/coopted', cooptation.coopted?.id, 'view']">{{cooptation.coopted?.id}}</a>
+                    </div>
+                </dd>
                 <dt><span>Coopter</span></dt>
                 <dd>
                     <div *ngIf="cooptation.coopter">
                         <a [routerLink]="['/coopter', cooptation.coopter?.id, 'view']">{{cooptation.coopter?.id}}</a>
                     </div>
                 </dd>
-                <dt><span>Coopted</span></dt>
+                <dt><span>Skills</span></dt>
                 <dd>
-                    <div *ngIf="cooptation.coopted">
-                        <a [routerLink]="['/coopted', cooptation.coopted?.id, 'view']">{{cooptation.coopted?.id}}</a>
-                    </div>
+                    <span *ngFor="let skills of cooptation.skills; let last = last">
+                        <a [routerLink]="['/skill', skills?.id, 'view' ]">{{skills.id}}</a>{{last ? '' : ', '}}
+                    </span>
                 </dd>
             </dl>
 

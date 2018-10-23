@@ -13,12 +13,6 @@
                 <dd>
                     <span>{{skill.label}}</span>
                 </dd>
-                <dt><span>Cooptation</span></dt>
-                <dd>
-                    <div *ngIf="skill.cooptation">
-                        <a [routerLink]="['/cooptation', skill.cooptation?.id, 'view']">{{skill.cooptation?.id}}</a>
-                    </div>
-                </dd>
             </dl>
 
             <button type="submit"

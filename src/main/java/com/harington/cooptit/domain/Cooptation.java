@@ -1,6 +1,5 @@
 package com.harington.cooptit.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -33,15 +32,18 @@ public class Cooptation implements Serializable {
     @Column(name = "performed_on")
     private Instant performedOn;
 
-    @OneToMany(mappedBy = "cooptation")
-    private Set<Skill> skills = new HashSet<>();
+    @OneToOne    @JoinColumn(unique = true)
+    private Coopted coopted;
+
     @ManyToOne
     @JsonIgnoreProperties("")
     private Coopter coopter;
 
-    @ManyToOne
-    @JsonIgnoreProperties("")
-    private Coopted coopted;
+    @ManyToMany
+    @JoinTable(name = "cooptation_skills",
+               joinColumns = @JoinColumn(name = "cooptations_id", referencedColumnName = "id"),
+               inverseJoinColumns = @JoinColumn(name = "skills_id", referencedColumnName = "id"))
+    private Set<Skill> skills = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -78,29 +80,17 @@ public class Cooptation implements Serializable {
         this.performedOn = performedOn;
     }
 
-    public Set<Skill> getSkills() {
-        return skills;
+    public Coopted getCoopted() {
+        return coopted;
     }
 
-    public Cooptation skills(Set<Skill> skills) {
-        this.skills = skills;
+    public Cooptation coopted(Coopted coopted) {
+        this.coopted = coopted;
         return this;
     }
 
-    public Cooptation addSkills(Skill skill) {
-        this.skills.add(skill);
-        skill.setCooptation(this);
-        return this;
-    }
-
-    public Cooptation removeSkills(Skill skill) {
-        this.skills.remove(skill);
-        skill.setCooptation(null);
-        return this;
-    }
-
-    public void setSkills(Set<Skill> skills) {
-        this.skills = skills;
+    public void setCoopted(Coopted coopted) {
+        this.coopted = coopted;
     }
 
     public Coopter getCoopter() {
@@ -116,17 +106,27 @@ public class Cooptation implements Serializable {
         this.coopter = coopter;
     }
 
-    public Coopted getCoopted() {
-        return coopted;
+    public Set<Skill> getSkills() {
+        return skills;
     }
 
-    public Cooptation coopted(Coopted coopted) {
-        this.coopted = coopted;
+    public Cooptation skills(Set<Skill> skills) {
+        this.skills = skills;
         return this;
     }
 
-    public void setCoopted(Coopted coopted) {
-        this.coopted = coopted;
+    public Cooptation addSkills(Skill skill) {
+        this.skills.add(skill);
+        return this;
+    }
+
+    public Cooptation removeSkills(Skill skill) {
+        this.skills.remove(skill);
+        return this;
+    }
+
+    public void setSkills(Set<Skill> skills) {
+        this.skills = skills;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

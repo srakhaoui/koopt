@@ -28,7 +28,13 @@ public interface CooptationService {
      */
     Page<Cooptation> findAll(Pageable pageable);
 
-
+    /**
+     * Get all the Cooptation with eager load of many-to-many relationships.
+     *
+     * @return the list of entities
+     */
+    Page<Cooptation> findAllWithEagerRelationships(Pageable pageable);
+    
     /**
      * Get the "id" cooptation.
      *

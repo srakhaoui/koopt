@@ -23,6 +23,13 @@
                 </div>
 
                 <div class="form-group">
+                    <label class="form-control-label" for="field_coopted">Coopted</label>
+                    <select class="form-control" id="field_coopted" name="coopted" [(ngModel)]="cooptation.coopted">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="cooptedOption.id === cooptation.coopted?.id ? cooptation.coopted : cooptedOption" *ngFor="let cooptedOption of coopteds; trackBy: trackCooptedById">{{cooptedOption.id}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label class="form-control-label" for="field_coopter">Coopter</label>
                     <select class="form-control" id="field_coopter" name="coopter" [(ngModel)]="cooptation.coopter" >
                         <option [ngValue]="null"></option>
@@ -30,10 +37,9 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" for="field_coopted">Coopted</label>
-                    <select class="form-control" id="field_coopted" name="coopted" [(ngModel)]="cooptation.coopted" >
-                        <option [ngValue]="null"></option>
-                        <option [ngValue]="cooptedOption.id === cooptation.coopted?.id ? cooptation.coopted : cooptedOption" *ngFor="let cooptedOption of coopteds; trackBy: trackCooptedById">{{cooptedOption.id}}</option>
+                    <label for="field_skills">Skills</label>
+                    <select class="form-control" id="field_skills" multiple name="skills" [(ngModel)]="cooptation.skills">
+                        <option [ngValue]="getSelected(cooptation.skills, skillOption)" *ngFor="let skillOption of skills; trackBy: trackSkillById">{{skillOption.id}}</option>
                     </select>
                 </div>
             </div>
