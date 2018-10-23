@@ -101,6 +101,11 @@ jhipster:
         license:
         license-url:
 
+camunda:
+    bpm:
+        admin-user:
+            id: admin
+            password: admin
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class
