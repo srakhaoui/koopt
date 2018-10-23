@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory
 import scala.concurrent.duration._
 
 /**
- * Performance test for the Cooptation entity.
+ * Performance test for the Skill entity.
  */
-class CooptationGatlingTest extends Simulation {
+class SkillGatlingTest extends Simulation {
 
     val context: LoggerContext = LoggerFactory.getILoggerFactory.asInstanceOf[LoggerContext]
     // Log all HTTP requests
@@ -43,7 +43,7 @@ class CooptationGatlingTest extends Simulation {
         "Authorization" -> "${access_token}"
     )
 
-    val scn = scenario("Test the Cooptation entity")
+    val scn = scenario("Test the Skill entity")
         .exec(http("First unauthenticated request")
         .get("/api/account")
         .headers(headers_http)
@@ -62,30 +62,30 @@ class CooptationGatlingTest extends Simulation {
         .check(status.is(200)))
         .pause(10)
         .repeat(2) {
-            exec(http("Get all cooptations")
-            .get("/api/cooptations")
+            exec(http("Get all skills")
+            .get("/api/skills")
             .headers(headers_http_authenticated)
             .check(status.is(200)))
             .pause(10 seconds, 20 seconds)
-            .exec(http("Create new cooptation")
-            .post("/api/cooptations")
+            .exec(http("Create new skill")
+            .post("/api/skills")
             .headers(headers_http_authenticated)
             .body(StringBody("""{
                 "id":null
-                , "profile":"SAMPLE_TEXT"
-                , "performedOn":"2020-01-01T00:00:00.000Z"
+                , "code":"SAMPLE_TEXT"
+                , "label":"SAMPLE_TEXT"
                 }""")).asJSON
             .check(status.is(201))
-            .check(headerRegex("Location", "(.*)").saveAs("new_cooptation_url"))).exitHereIfFailed
+            .check(headerRegex("Location", "(.*)").saveAs("new_skill_url"))).exitHereIfFailed
             .pause(10)
             .repeat(5) {
-                exec(http("Get created cooptation")
-                .get("${new_cooptation_url}")
+                exec(http("Get created skill")
+                .get("${new_skill_url}")
                 .headers(headers_http_authenticated))
                 .pause(10)
             }
-            .exec(http("Delete created cooptation")
-            .delete("${new_cooptation_url}")
+            .exec(http("Delete created skill")
+            .delete("${new_skill_url}")
             .headers(headers_http_authenticated))
             .pause(10)
         }

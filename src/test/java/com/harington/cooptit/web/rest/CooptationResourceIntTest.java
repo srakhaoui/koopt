@@ -51,9 +51,6 @@ public class CooptationResourceIntTest {
     private static final String DEFAULT_PROFILE = "AAAAAAAAAA";
     private static final String UPDATED_PROFILE = "BBBBBBBBBB";
 
-    private static final String DEFAULT_SKILLS = "AAAAAAAAAA";
-    private static final String UPDATED_SKILLS = "BBBBBBBBBB";
-
     private static final Instant DEFAULT_PERFORMED_ON = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_PERFORMED_ON = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
@@ -107,7 +104,6 @@ public class CooptationResourceIntTest {
     public static Cooptation createEntity(EntityManager em) {
         Cooptation cooptation = new Cooptation()
             .profile(DEFAULT_PROFILE)
-            .skills(DEFAULT_SKILLS)
             .performedOn(DEFAULT_PERFORMED_ON);
         return cooptation;
     }
@@ -133,7 +129,6 @@ public class CooptationResourceIntTest {
         assertThat(cooptationList).hasSize(databaseSizeBeforeCreate + 1);
         Cooptation testCooptation = cooptationList.get(cooptationList.size() - 1);
         assertThat(testCooptation.getProfile()).isEqualTo(DEFAULT_PROFILE);
-        assertThat(testCooptation.getSkills()).isEqualTo(DEFAULT_SKILLS);
         assertThat(testCooptation.getPerformedOn()).isEqualTo(DEFAULT_PERFORMED_ON);
 
         // Validate the Cooptation in Elasticsearch
@@ -174,7 +169,6 @@ public class CooptationResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(cooptation.getId().intValue())))
             .andExpect(jsonPath("$.[*].profile").value(hasItem(DEFAULT_PROFILE.toString())))
-            .andExpect(jsonPath("$.[*].skills").value(hasItem(DEFAULT_SKILLS.toString())))
             .andExpect(jsonPath("$.[*].performedOn").value(hasItem(DEFAULT_PERFORMED_ON.toString())));
     }
     
@@ -190,7 +184,6 @@ public class CooptationResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(cooptation.getId().intValue()))
             .andExpect(jsonPath("$.profile").value(DEFAULT_PROFILE.toString()))
-            .andExpect(jsonPath("$.skills").value(DEFAULT_SKILLS.toString()))
             .andExpect(jsonPath("$.performedOn").value(DEFAULT_PERFORMED_ON.toString()));
     }
 
@@ -218,7 +211,6 @@ public class CooptationResourceIntTest {
         em.detach(updatedCooptation);
         updatedCooptation
             .profile(UPDATED_PROFILE)
-            .skills(UPDATED_SKILLS)
             .performedOn(UPDATED_PERFORMED_ON);
 
         restCooptationMockMvc.perform(put("/api/cooptations")
@@ -231,7 +223,6 @@ public class CooptationResourceIntTest {
         assertThat(cooptationList).hasSize(databaseSizeBeforeUpdate);
         Cooptation testCooptation = cooptationList.get(cooptationList.size() - 1);
         assertThat(testCooptation.getProfile()).isEqualTo(UPDATED_PROFILE);
-        assertThat(testCooptation.getSkills()).isEqualTo(UPDATED_SKILLS);
         assertThat(testCooptation.getPerformedOn()).isEqualTo(UPDATED_PERFORMED_ON);
 
         // Validate the Cooptation in Elasticsearch
@@ -293,7 +284,6 @@ public class CooptationResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(cooptation.getId().intValue())))
             .andExpect(jsonPath("$.[*].profile").value(hasItem(DEFAULT_PROFILE.toString())))
-            .andExpect(jsonPath("$.[*].skills").value(hasItem(DEFAULT_SKILLS.toString())))
             .andExpect(jsonPath("$.[*].performedOn").value(hasItem(DEFAULT_PERFORMED_ON.toString())));
     }
 

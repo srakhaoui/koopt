@@ -1,5 +1,6 @@
 package com.harington.cooptit.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -7,6 +8,8 @@ import javax.persistence.*;
 import org.springframework.data.elasticsearch.annotations.Document;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -27,12 +30,11 @@ public class Cooptation implements Serializable {
     @Column(name = "jhi_profile")
     private String profile;
 
-    @Column(name = "skills")
-    private String skills;
-
     @Column(name = "performed_on")
     private Instant performedOn;
 
+    @OneToMany(mappedBy = "cooptation")
+    private Set<Skill> skills = new HashSet<>();
     @ManyToOne
     @JsonIgnoreProperties("")
     private Coopter coopter;
@@ -63,19 +65,6 @@ public class Cooptation implements Serializable {
         this.profile = profile;
     }
 
-    public String getSkills() {
-        return skills;
-    }
-
-    public Cooptation skills(String skills) {
-        this.skills = skills;
-        return this;
-    }
-
-    public void setSkills(String skills) {
-        this.skills = skills;
-    }
-
     public Instant getPerformedOn() {
         return performedOn;
     }
@@ -87,6 +76,31 @@ public class Cooptation implements Serializable {
 
     public void setPerformedOn(Instant performedOn) {
         this.performedOn = performedOn;
+    }
+
+    public Set<Skill> getSkills() {
+        return skills;
+    }
+
+    public Cooptation skills(Set<Skill> skills) {
+        this.skills = skills;
+        return this;
+    }
+
+    public Cooptation addSkills(Skill skill) {
+        this.skills.add(skill);
+        skill.setCooptation(this);
+        return this;
+    }
+
+    public Cooptation removeSkills(Skill skill) {
+        this.skills.remove(skill);
+        skill.setCooptation(null);
+        return this;
+    }
+
+    public void setSkills(Set<Skill> skills) {
+        this.skills = skills;
     }
 
     public Coopter getCoopter() {
@@ -141,7 +155,6 @@ public class Cooptation implements Serializable {
         return "Cooptation{" +
             "id=" + getId() +
             ", profile='" + getProfile() + "'" +
-            ", skills='" + getSkills() + "'" +
             ", performedOn='" + getPerformedOn() + "'" +
             "}";
     }

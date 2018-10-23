@@ -27,7 +27,6 @@ export class CooptationUpdatePage {
     saveButton = element(by.id('save-entity'));
     cancelButton = element(by.id('cancel-save'));
     profileInput = element(by.id('field_profile'));
-    skillsInput = element(by.id('field_skills'));
     performedOnInput = element(by.id('field_performedOn'));
     coopterSelect = element(by.id('field_coopter'));
     cooptedSelect = element(by.id('field_coopted'));
@@ -42,14 +41,6 @@ export class CooptationUpdatePage {
 
     async getProfileInput() {
         return this.profileInput.getAttribute('value');
-    }
-
-    async setSkillsInput(skills) {
-        await this.skillsInput.sendKeys(skills);
-    }
-
-    async getSkillsInput() {
-        return this.skillsInput.getAttribute('value');
     }
 
     async setPerformedOnInput(performedOn) {

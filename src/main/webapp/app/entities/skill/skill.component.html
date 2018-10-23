@@ -1,10 +1,10 @@
 <div>
     <h2 id="page-heading">
-        <span>Cooptations</span>
-        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-cooptation" [routerLink]="['/cooptation/new']">
+        <span>Skills</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-skill" [routerLink]="['/skill/new']">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span class="hidden-sm-down" >
-            Create new Cooptation
+            Create new Skill
             </span>
         </button>
     </h2>
@@ -25,49 +25,43 @@
         </div>
     </div>
     <br/>
-    <div class="table-responsive" *ngIf="cooptations">
+    <div class="table-responsive" *ngIf="skills">
         <table class="table table-striped">
             <thead>
-            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="reset.bind(this)">
-            <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="profile"><span>Profile</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="performedOn"><span>Performed On</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="coopter.id"><span>Coopter</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="coopted.id"><span>Coopted</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <tr>
+            <th><span>ID</span></th>
+            <th><span>Code</span></th>
+            <th><span>Label</span></th>
+            <th><span>Cooptation</span></th>
             <th></th>
             </tr>
             </thead>
-            <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
-            <tr *ngFor="let cooptation of cooptations ;trackBy: trackId">
-                <td><a [routerLink]="['/cooptation', cooptation.id, 'view' ]">{{cooptation.id}}</a></td>
-                <td>{{cooptation.profile}}</td>
-                <td>{{cooptation.performedOn | date:'medium'}}</td>
+            <tbody>
+            <tr *ngFor="let skill of skills ;trackBy: trackId">
+                <td><a [routerLink]="['/skill', skill.id, 'view' ]">{{skill.id}}</a></td>
+                <td>{{skill.code}}</td>
+                <td>{{skill.label}}</td>
                 <td>
-                    <div *ngIf="cooptation.coopter">
-                        <a [routerLink]="['../coopter', cooptation.coopter?.id, 'view' ]" >{{cooptation.coopter?.id}}</a>
-                    </div>
-                </td>
-                <td>
-                    <div *ngIf="cooptation.coopted">
-                        <a [routerLink]="['../coopted', cooptation.coopted?.id, 'view' ]" >{{cooptation.coopted?.id}}</a>
+                    <div *ngIf="skill.cooptation">
+                        <a [routerLink]="['../cooptation', skill.cooptation?.id, 'view' ]" >{{skill.cooptation?.id}}</a>
                     </div>
                 </td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
-                                [routerLink]="['/cooptation', cooptation.id, 'view' ]"
+                                [routerLink]="['/skill', skill.id, 'view' ]"
                                 class="btn btn-info btn-sm">
                             <fa-icon [icon]="'eye'"></fa-icon>
                             <span class="d-none d-md-inline">View</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/cooptation', cooptation.id, 'edit']"
+                                [routerLink]="['/skill', skill.id, 'edit']"
                                 class="btn btn-primary btn-sm">
                             <fa-icon [icon]="'pencil-alt'"></fa-icon>
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'cooptation/'+ cooptation.id + '/delete'} }]"
+                                [routerLink]="['/', { outlets: { popup: 'skill/'+ skill.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">

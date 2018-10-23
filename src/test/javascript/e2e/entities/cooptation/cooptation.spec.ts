@@ -40,13 +40,11 @@ describe('Cooptation e2e test', () => {
         await cooptationComponentsPage.clickOnCreateButton();
         await promise.all([
             cooptationUpdatePage.setProfileInput('profile'),
-            cooptationUpdatePage.setSkillsInput('skills'),
             cooptationUpdatePage.setPerformedOnInput('01/01/2001' + protractor.Key.TAB + '02:30AM'),
             cooptationUpdatePage.coopterSelectLastOption(),
             cooptationUpdatePage.cooptedSelectLastOption()
         ]);
         expect(await cooptationUpdatePage.getProfileInput()).to.eq('profile');
-        expect(await cooptationUpdatePage.getSkillsInput()).to.eq('skills');
         expect(await cooptationUpdatePage.getPerformedOnInput()).to.contain('2001-01-01T02:30');
         await cooptationUpdatePage.save();
         expect(await cooptationUpdatePage.getSaveButton().isPresent()).to.be.false;

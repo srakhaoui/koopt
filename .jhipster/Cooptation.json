@@ -6,15 +6,17 @@
             "fieldType": "String"
         },
         {
-            "fieldName": "skills",
-            "fieldType": "String"
-        },
-        {
             "fieldName": "performedOn",
             "fieldType": "Instant"
         }
     ],
     "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "skills",
+            "otherEntityName": "skill",
+            "otherEntityRelationshipName": "cooptation"
+        },
         {
             "relationshipType": "many-to-one",
             "relationshipName": "coopter",
