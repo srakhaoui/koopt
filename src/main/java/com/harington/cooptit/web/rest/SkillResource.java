@@ -5,7 +5,9 @@ import com.harington.cooptit.domain.Skill;
 import com.harington.cooptit.service.SkillService;
 import com.harington.cooptit.web.rest.errors.BadRequestAlertException;
 import com.harington.cooptit.web.rest.util.HeaderUtil;
+
 import io.github.jhipster.web.util.ResponseUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.StreamSupport;
-
-import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * REST controller for managing Skill.
@@ -131,6 +129,21 @@ public class SkillResource {
     public List<Skill> searchSkills(@RequestParam String query) {
         log.debug("REST request to search Skills for query {}", query);
         return skillService.search(query);
+    }
+
+    /**
+     * SEARCH  /_search/skills/labels?prefix=:prefix : search for the skill corresponding
+     * to the query.
+     *
+     * @param query the query of the skill search
+     * @return the result of the search
+     * @throws Exception 
+     */
+    @GetMapping("/_search/skills/labels")
+    @Timed
+    public List<String> searchSkillsLabels(@RequestParam String prefix) throws Exception {
+        log.debug("REST request to search Skills' labels for prefix {}", prefix);
+        return skillService.suggestLabels(prefix);
     }
 
 }

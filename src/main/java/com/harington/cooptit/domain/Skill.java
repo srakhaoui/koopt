@@ -1,18 +1,22 @@
 package com.harington.cooptit.domain;
 
 
-import javax.persistence.*;
-
-import org.springframework.data.elasticsearch.annotations.Document;
 import java.io.Serializable;
 import java.util.Objects;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 /**
  * A Skill.
  */
 @Entity
 @Table(name = "skill")
-@Document(indexName = "skill")
 public class Skill implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -28,7 +32,7 @@ public class Skill implements Serializable {
     @Column(name = "jhi_label")
     private String label;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+	// jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -59,7 +63,7 @@ public class Skill implements Serializable {
         return this;
     }
 
-    public void setLabel(String label) {
+	public void setLabel(String label) {
         this.label = label;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove

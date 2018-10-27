@@ -1,16 +1,20 @@
 package com.harington.cooptit.web.rest;
 
 import com.harington.cooptit.CooptitApp;
-
 import com.harington.cooptit.domain.Skill;
+import com.harington.cooptit.domain.es.SkillEs;
+import com.harington.cooptit.mapper.SkillMapper;
 import com.harington.cooptit.repository.SkillRepository;
 import com.harington.cooptit.repository.search.SkillSearchRepository;
 import com.harington.cooptit.service.SkillService;
 import com.harington.cooptit.web.rest.errors.ExceptionTranslator;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,9 +27,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+
 import java.util.Collections;
 import java.util.List;
-
 
 import static com.harington.cooptit.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -79,6 +83,9 @@ public class SkillResourceIntTest {
     private MockMvc restSkillMockMvc;
 
     private Skill skill;
+    
+    @Captor
+    private ArgumentCaptor<SkillEs> skillEsCaptor;
 
     @Before
     public void setup() {
@@ -128,7 +135,11 @@ public class SkillResourceIntTest {
         assertThat(testSkill.getLabel()).isEqualTo(DEFAULT_LABEL);
 
         // Validate the Skill in Elasticsearch
-        verify(mockSkillSearchRepository, times(1)).save(testSkill);
+        SkillEs expectedSkillEs = SkillMapper.INSTANCE.skillToSkillEs(testSkill);
+        verify(mockSkillSearchRepository, times(1)).save(skillEsCaptor.capture());
+        final SkillEs actualSkillEs = skillEsCaptor.getValue();
+        Assertions.assertThat(actualSkillEs).isEqualToIgnoringGivenFields(expectedSkillEs, SkillEs.COMPLETION_FIELD);
+        Assertions.assertThat(actualSkillEs.getCompletion()).isEqualToComparingFieldByField(expectedSkillEs.getCompletion());
     }
 
     @Test
@@ -150,7 +161,8 @@ public class SkillResourceIntTest {
         assertThat(skillList).hasSize(databaseSizeBeforeCreate);
 
         // Validate the Skill in Elasticsearch
-        verify(mockSkillSearchRepository, times(0)).save(skill);
+        SkillEs skillEs = SkillMapper.INSTANCE.skillToSkillEs(skill);
+        verify(mockSkillSearchRepository, times(0)).save(skillEs);
     }
 
     @Test
@@ -222,7 +234,11 @@ public class SkillResourceIntTest {
         assertThat(testSkill.getLabel()).isEqualTo(UPDATED_LABEL);
 
         // Validate the Skill in Elasticsearch
-        verify(mockSkillSearchRepository, times(1)).save(testSkill);
+        SkillEs expectedSkillEs = SkillMapper.INSTANCE.skillToSkillEs(testSkill);
+        verify(mockSkillSearchRepository, times(1)).save(skillEsCaptor.capture());
+        final SkillEs actualSkillEs = skillEsCaptor.getValue();
+        Assertions.assertThat(actualSkillEs).isEqualToIgnoringGivenFields(expectedSkillEs, SkillEs.COMPLETION_FIELD);
+        Assertions.assertThat(actualSkillEs.getCompletion()).isEqualToComparingFieldByField(expectedSkillEs.getCompletion());
     }
 
     @Test
@@ -243,7 +259,8 @@ public class SkillResourceIntTest {
         assertThat(skillList).hasSize(databaseSizeBeforeUpdate);
 
         // Validate the Skill in Elasticsearch
-        verify(mockSkillSearchRepository, times(0)).save(skill);
+        SkillEs skillEs = SkillMapper.INSTANCE.skillToSkillEs(skill);
+        verify(mockSkillSearchRepository, times(0)).save(skillEs);
     }
 
     @Test
@@ -272,8 +289,9 @@ public class SkillResourceIntTest {
     public void searchSkill() throws Exception {
         // Initialize the database
         skillService.save(skill);
+        SkillEs skillEs = SkillMapper.INSTANCE.skillToSkillEs(skill);
         when(mockSkillSearchRepository.search(queryStringQuery("id:" + skill.getId())))
-            .thenReturn(Collections.singletonList(skill));
+            .thenReturn(Collections.singletonList(skillEs));
         // Search the skill
         restSkillMockMvc.perform(get("/api/_search/skills?query=id:" + skill.getId()))
             .andExpect(status().isOk())

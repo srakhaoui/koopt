@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import {catchError, debounceTime, distinctUntilChanged, map, tap, switchMap} from 'rxjs/operators';
 import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { JhiAlertService } from 'ng-jhipster';
@@ -17,7 +18,8 @@ import { SkillService } from 'app/entities/skill';
 
 @Component({
     selector: 'jhi-cooptation-update',
-    templateUrl: './cooptation-update.component.html'
+    templateUrl: './cooptation-update.component.html',
+    styles: [`.form-control { width: 300px; display: inline; }`]
 })
 export class CooptationUpdateComponent implements OnInit {
     cooptation: ICooptation;
@@ -28,6 +30,13 @@ export class CooptationUpdateComponent implements OnInit {
     coopters: ICoopter[];
 
     skills: ISkill[];
+
+    skill: string;
+
+    searching = false;
+
+    searchFailed = false;
+
     performedOn: string;
 
     constructor(
@@ -63,12 +72,6 @@ export class CooptationUpdateComponent implements OnInit {
         this.coopterService.query().subscribe(
             (res: HttpResponse<ICoopter[]>) => {
                 this.coopters = res.body;
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
-        this.skillService.query().subscribe(
-            (res: HttpResponse<ISkill[]>) => {
-                this.skills = res.body;
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
@@ -127,4 +130,36 @@ export class CooptationUpdateComponent implements OnInit {
         }
         return option;
     }
+
+    /*
+    * this.skillService.query({
+            query: this.currentSearch
+        }).subscribe(
+            (res: HttpResponse<ISkill[]>) => {
+                this.skills = res.body;
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
+    *
+    * */
+
+    searchSkills = (text$: Observable<string>) =>
+        text$.pipe(
+            debounceTime(300),
+            distinctUntilChanged(),
+            tap(() => this.searching = true),
+            switchMap(term =>
+                this.skillService.suggest({
+                    prefix: term
+                }).pipe(
+                    tap(() => this.searchFailed = false),
+                    catchError(() => {
+                        this.searchFailed = true;
+                        return of([]);
+                    }),
+                    map((resp: HttpResponse<string[]>) => resp.body )
+                )
+            ),
+            tap(() => this.searching = false)
+        )
 }

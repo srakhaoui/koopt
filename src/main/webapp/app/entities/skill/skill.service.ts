@@ -13,6 +13,7 @@ type EntityArrayResponseType = HttpResponse<ISkill[]>;
 export class SkillService {
     public resourceUrl = SERVER_API_URL + 'api/skills';
     public resourceSearchUrl = SERVER_API_URL + 'api/_search/skills';
+    public resourceSuggestUrl = this.resourceSearchUrl + '/labels';
 
     constructor(private http: HttpClient) {}
 
@@ -40,5 +41,10 @@ export class SkillService {
     search(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
         return this.http.get<ISkill[]>(this.resourceSearchUrl, { params: options, observe: 'response' });
+    }
+
+    suggest(req?: any): Observable<HttpResponse<string[]>> {
+        const options = createRequestOption(req);
+        return this.http.get<string[]>(this.resourceSuggestUrl, { params: options, observe: 'response' });
     }
 }

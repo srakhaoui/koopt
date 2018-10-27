@@ -49,4 +49,13 @@ public interface SkillService {
      * @return the list of entities
      */
     List<Skill> search(String query);
+    
+    /**
+     * Suggest labels starting with the given prefix
+     *
+     * @param prefix the prefix of the suggestion
+     * 
+     * @return the list of labels
+     */
+    List<String> suggestLabels(String prefix) throws Exception;
 }
