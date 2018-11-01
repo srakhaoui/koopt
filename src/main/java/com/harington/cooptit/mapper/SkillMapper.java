@@ -12,7 +12,7 @@ public interface SkillMapper {
 
 	SkillMapper INSTANCE = Mappers.getMapper( SkillMapper.class );
 	
-	@Mapping(target="suggest", ignore=true)
+	@Mapping(target="completion", ignore=true)
 	SkillEs skillToSkillEs(Skill car);
 
 	Skill skillEsToSkill(SkillEs skillEs);
