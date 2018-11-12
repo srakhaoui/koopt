@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="shortcut icon" href="${baseUrl}/favicon.ico" />
-    <title>Your request cannot be processed</title>
+    <title>Votre demande ne peut pas être taitée</title>
     <style>
         ::-moz-selection {
             background: #b3d4fc;
@@ -143,11 +143,11 @@
 </head>
 <body>
 <div class="container">
-    <h1 th:text="#{error.title}">Your request cannot be processed <span>:(</span></h1>
+    <h1 th:text="#{error.title}">Votre demande ne peut pas être traitée <span>:(</span></h1>
 
-    <p th:text="#{error.subtitle}">Sorry, an error has occurred.</p>
+    <p th:text="#{error.subtitle}">Nous sommes désolé, une erreur est survenue</p>
 
-    <span th:text="#{error.status}">Status:</span>&nbsp;<span th:text="${error}"></span>&nbsp;(<span th:text="${error}"></span>)<br/>
+    <span th:text="#{error.status}">Statut:</span>&nbsp;<span th:text="${error}"></span>&nbsp;(<span th:text="${error}"></span>)<br/>
     <span th:if="${!#strings.isEmpty(message)}">
         <span th:text="#{error.message}">Message:</span>&nbsp;<span th:text="${message}"></span><br/>
     </span>

@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h4 class="modal-title">Sign in</h4>
+    <h4 class="modal-title">Se connecter</h4>
     <button aria-label="Close" data-dismiss="modal" class="close" type="button" (click)="activeModal.dismiss('closed')"><span aria-hidden="true">x</span>
     </button>
 </div>
@@ -7,7 +7,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="alert alert-danger" *ngIf="authenticationError">
-                <strong>Failed to sign in!</strong> Please check your credentials and try again.
+                <strong>Echec de connexion!</strong> Veuillez vérifier votre login/mot de passe et ré-essayer.
             </div>
         </div>
         <div class="col-md-8">
@@ -18,7 +18,7 @@
                     [(ngModel)]="username">
                 </div>
                 <div class="form-group">
-                    <label for="password">Password</label>
+                    <label for="password">Mot de passe</label>
                     <input type="password" class="form-control" name="password" id="password" placeholder="Your password"
                            [(ngModel)]="password">
                 </div>
@@ -28,15 +28,15 @@
                         <span>Remember me</span>
                     </label>
                 </div>
-                <button type="submit" class="btn btn-primary">Sign in</button>
+                <button type="submit" class="btn btn-primary">Se connecter</button>
             </form>
             <p></p>
             <div class="alert alert-warning">
-                <a class="alert-link" (click)="requestResetPassword()">Did you forget your password?</a>
+                <a class="alert-link" (click)="requestResetPassword()">Mot de passe oublié?</a>
             </div>
             <div class="alert alert-warning">
-                <span>You don't have an account yet?</span>
-                <a class="alert-link" (click)="register()">Register a new account</a>
+                <span>Vous n'avez pas encore un compte?</span>
+                <a class="alert-link" (click)="register()">Souscrire pour un nouveau compte</a>
             </div>
         </div>
     </div>
