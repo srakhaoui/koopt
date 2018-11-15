@@ -28,8 +28,8 @@
         <div class="col-md-8">
             <form name="form" role="form" (ngSubmit)="register()" #registerForm="ngForm" *ngIf="!success">
                 <div class="form-group">
-                    <label class="form-control-label" for="login">Username</label>
-                    <input type="text" class="form-control" [(ngModel)]="registerAccount.login" id="login" name="login" #login="ngModel" placeholder="Your username"
+                    <label class="form-control-label" for="login">Nom d'utilisateur</label>
+                    <input type="text" class="form-control" [(ngModel)]="registerAccount.login" id="login" name="login" #login="ngModel" placeholder="Votre nom d'utilisateur"
                             required minlength="1" maxlength="50" pattern="^[_.@A-Za-z0-9-]*$">
                     <div *ngIf="login.dirty && login.invalid">
                         <small class="form-text text-danger" *ngIf="login.errors.required">
@@ -51,7 +51,7 @@
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="email">Email</label>
-                    <input type="email" class="form-control" id="email" name="email" #email="ngModel" placeholder="Your email"
+                    <input type="email" class="form-control" id="email" name="email" #email="ngModel" placeholder="Votre email"
                             [(ngModel)]="registerAccount.email" minlength=5 maxlength=254 email required>
                     <div *ngIf="email.dirty && email.invalid">
                         <small class="form-text text-danger" *ngIf="email.errors.required"
@@ -74,7 +74,7 @@
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="password">Nouveau mot de passe</label>
-                    <input type="password" class="form-control" id="password" name="password" #password="ngModel" placeholder="New password"
+                    <input type="password" class="form-control" id="password" name="password" #password="ngModel" placeholder="Nouveau mot de passe"
                             [(ngModel)]="registerAccount.password" minlength=4 maxlength=50 required>
                     <div *ngIf="password.dirty && password.invalid">
                         <small class="form-text text-danger" *ngIf="password.errors.required"
@@ -94,7 +94,7 @@
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="confirmPassword">Confirmation mot de passe</label>
-                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" #confirmPasswordInput="ngModel" placeholder="Confirm the new password"
+                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" #confirmPasswordInput="ngModel" placeholder="Confirmation du nouveau mot de passe"
                             [(ngModel)]="confirmPassword" minlength=4 maxlength=50 required>
                     <div *ngIf="confirmPasswordInput.dirty && confirmPasswordInput.invalid">
                         <small class="form-text text-danger" *ngIf="confirmPasswordInput.errors.required"
@@ -115,10 +115,6 @@
                 <button type="submit" [disabled]="registerForm.form.invalid" class="btn btn-primary">S'inscrire</button>
             </form>
             <p></p>
-            <div class="alert alert-warning">
-                <span>Si vous voulez vous </span>
-                <a class="alert-link" (click)="openLogin()">connecter</a><span>, you can try the default accounts:<br/>- Administrator (login="admin" and password="admin") <br/>- User (login="user" and password="user").</span>
-            </div>
         </div>
     </div>
 </div>
