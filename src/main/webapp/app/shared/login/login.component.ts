@@ -5,6 +5,7 @@ import { JhiEventManager } from 'ng-jhipster';
 
 import { LoginService } from 'app/core/login/login.service';
 import { StateStorageService } from 'app/core/auth/state-storage.service';
+import { Principal } from 'app/core';
 
 @Component({
     selector: 'jhi-login-modal',
@@ -24,7 +25,8 @@ export class JhiLoginModalComponent implements AfterViewInit {
         private elementRef: ElementRef,
         private renderer: Renderer,
         private router: Router,
-        public activeModal: NgbActiveModal
+        public activeModal: NgbActiveModal,
+        private principal: Principal
     ) {
         this.credentials = {};
     }
@@ -53,14 +55,29 @@ export class JhiLoginModalComponent implements AfterViewInit {
             .then(() => {
                 this.authenticationError = false;
                 this.activeModal.dismiss('login success');
-                if (this.router.url === '/register' || /^\/activate\//.test(this.router.url) || /^\/reset\//.test(this.router.url)) {
-                    this.router.navigate(['']);
-                }
 
                 this.eventManager.broadcast({
                     name: 'authenticationSuccess',
                     content: 'Sending Authentication Success'
                 });
+
+                if (!this.principal.isAuthenticated()) {
+                    this.router.navigate(['/register']);
+                } else {
+                    this.principal.hasAnyAuthority(['ROLE_ADMIN']).then(result1 => {
+                        if (result1) {
+                            this.router.navigate(['/admin/user-management']);
+                        } else {
+                            this.principal.hasAnyAuthority(['ROLE_USER']).then(result2 => {
+                                if (result2) {
+                                    this.router.navigate(['/cooptation']);
+                                } else {
+                                    this.router.navigate(['/']);
+                                }
+                            });
+                        }
+                    });
+                }
 
                 // previousState was set in the authExpiredInterceptor before being redirected to login modal.
                 // since login is succesful, go to stored previousState and clear previousState
