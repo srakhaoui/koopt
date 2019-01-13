@@ -56,6 +56,7 @@ spring:
     data:
         jest:
             uri: http://ec2-34-245-15-23.eu-west-1.compute.amazonaws.com:9200
+            #uri: http://localhost:9200
     liquibase:
         contexts: dev
     mail:

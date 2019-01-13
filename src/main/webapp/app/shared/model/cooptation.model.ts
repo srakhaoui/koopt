@@ -6,9 +6,17 @@ import { ISkill } from 'app/shared/model//skill.model';
 export interface ICooptation {
     id?: number;
     profile?: string;
+<<<<<<< stable
     performedOn?: Moment;
     coopted?: ICoopted;
     coopter?: ICoopter;
+=======
+    firstName?: string;
+    lastName?: string;
+    linkedIn?: string;
+    email?: string;
+    phoneNumber?: string;
+>>>>>>> 4925161 Remove performedOn field from the front Cooptation  entity
     skills?: ISkill[];
 }
 
