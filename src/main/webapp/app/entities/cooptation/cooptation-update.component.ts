@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import {catchError, debounceTime, distinctUntilChanged, map, tap, switchMap} from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, map, tap, switchMap } from 'rxjs/operators';
 import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { JhiAlertService } from 'ng-jhipster';
@@ -12,7 +12,6 @@ import { CooptationService } from './cooptation.service';
 import { ICoopted } from 'app/shared/model/coopted.model';
 import { CooptedService } from 'app/entities/coopted';
 import { ICoopter } from 'app/shared/model/coopter.model';
-import { CoopterService } from 'app/entities/coopter';
 import { ISkill } from 'app/shared/model/skill.model';
 import { SkillService } from 'app/entities/skill';
 
@@ -26,8 +25,6 @@ export class CooptationUpdateComponent implements OnInit {
     isSaving: boolean;
 
     coopteds: ICoopted[];
-
-    coopters: ICoopter[];
 
     skills: ISkill[];
 
@@ -43,7 +40,6 @@ export class CooptationUpdateComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private cooptationService: CooptationService,
         private cooptedService: CooptedService,
-        private coopterService: CoopterService,
         private skillService: SkillService,
         private activatedRoute: ActivatedRoute
     ) {}
@@ -54,27 +50,9 @@ export class CooptationUpdateComponent implements OnInit {
             this.cooptation = cooptation;
             this.performedOn = this.cooptation.performedOn != null ? this.cooptation.performedOn.format(DATE_TIME_FORMAT) : null;
         });
-        this.cooptedService.query({ filter: 'cooptation-is-null' }).subscribe(
-            (res: HttpResponse<ICoopted[]>) => {
-                if (!this.cooptation.coopted || !this.cooptation.coopted.id) {
-                    this.coopteds = res.body;
-                } else {
-                    this.cooptedService.find(this.cooptation.coopted.id).subscribe(
-                        (subRes: HttpResponse<ICoopted>) => {
-                            this.coopteds = [subRes.body].concat(res.body);
-                        },
-                        (subRes: HttpErrorResponse) => this.onError(subRes.message)
-                    );
-                }
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
-        this.coopterService.query().subscribe(
-            (res: HttpResponse<ICoopter[]>) => {
-                this.coopters = res.body;
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
+        this.cooptedService
+            .query({ filter: 'cooptation-is-null' })
+            .subscribe((res: HttpResponse<ICoopted[]>) => {}, (res: HttpErrorResponse) => this.onError(res.message));
     }
 
     previousState() {
@@ -131,35 +109,28 @@ export class CooptationUpdateComponent implements OnInit {
         return option;
     }
 
-    /*
-    * this.skillService.query({
-            query: this.currentSearch
-        }).subscribe(
-            (res: HttpResponse<ISkill[]>) => {
-                this.skills = res.body;
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
+    private loadSkills() {
+        this.skills$ = concat(
+            of([]), // default items
+            this.skillsInput$.pipe(
+                debounceTime(300),
+                distinctUntilChanged(),
+                tap(() => this.skillsLoading = true),
+                switchMap(term =>
+                    this.skillService.suggest({
+                        prefix: term
+                    }).pipe(
+                        catchError(() => of([])),
+                        map((resp: HttpResponse<string[]>) => resp.body),
+                        map((suggestions: string[]) => {
+                            console.log(suggestions);
+                            const options = [];
+                            suggestions.forEach(suggestion => options.push({ name: suggestion }));
+                            return options;
+                        }))
+                ),
+                tap(() => this.skillsLoading = false)
+            )
         );
-    *
-    * */
-
-    searchSkills = (text$: Observable<string>) =>
-        text$.pipe(
-            debounceTime(300),
-            distinctUntilChanged(),
-            tap(() => this.searching = true),
-            switchMap(term =>
-                this.skillService.suggest({
-                    prefix: term
-                }).pipe(
-                    tap(() => this.searchFailed = false),
-                    catchError(() => {
-                        this.searchFailed = true;
-                        return of([]);
-                    }),
-                    map((resp: HttpResponse<string[]>) => resp.body )
-                )
-            ),
-            tap(() => this.searching = false)
-        )
+    }
 }
