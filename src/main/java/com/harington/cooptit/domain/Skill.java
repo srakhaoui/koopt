@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * A Skill.
  */
@@ -59,12 +61,12 @@ public class Skill implements Serializable {
     }
 
     public Skill label(String label) {
-        this.label = label;
+        this.label = StringUtils.capitalize(label);
         return this;
     }
 
 	public void setLabel(String label) {
-        this.label = label;
+        this.label = StringUtils.capitalize(label);
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

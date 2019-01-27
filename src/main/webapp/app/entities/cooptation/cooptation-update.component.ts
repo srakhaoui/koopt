@@ -9,12 +9,13 @@ import { JhiAlertService } from 'ng-jhipster';
 
 import { ICooptation } from 'app/shared/model/cooptation.model';
 import { CooptationService } from './cooptation.service';
-import { ICoopted } from 'app/shared/model/coopted.model';
+import {Coopted, ICoopted} from 'app/shared/model/coopted.model';
 import { CooptedService } from 'app/entities/coopted';
 import { ICoopter } from 'app/shared/model/coopter.model';
 import { CoopterService } from 'app/entities/coopter';
 import { ISkill } from 'app/shared/model/skill.model';
 import { SkillService } from 'app/entities/skill';
+import {User} from 'app/core';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.Default,
@@ -25,20 +26,12 @@ import { SkillService } from 'app/entities/skill';
 export class CooptationUpdateComponent implements OnInit {
     cooptation: ICooptation;
     isSaving: boolean;
-
-    coopteds: ICoopted[];
-
     coopters: ICoopter[];
 
-    skills: ISkill[];
-
-    performedOn: string;
-    
-    skills$: Observable<string[]>;
+    skills$: Observable<ISkill[]>;
     skillsLoading = false;
     skillsInput$ = new Subject<string>();
-    selectedSkills: any = [];
-    
+
     constructor(
         private jhiAlertService: JhiAlertService,
         private cooptationService: CooptationService,
@@ -52,23 +45,18 @@ export class CooptationUpdateComponent implements OnInit {
         this.isSaving = false;
         this.activatedRoute.data.subscribe(({ cooptation }) => {
             this.cooptation = cooptation;
-            this.performedOn = this.cooptation.performedOn != null ? this.cooptation.performedOn.format(DATE_TIME_FORMAT) : null;
         });
-        this.cooptedService.query({ filter: 'cooptation-is-null' }).subscribe(
-            (res: HttpResponse<ICoopted[]>) => {
-                if (!this.cooptation.coopted || !this.cooptation.coopted.id) {
-                    this.coopteds = res.body;
-                } else {
-                    this.cooptedService.find(this.cooptation.coopted.id).subscribe(
-                        (subRes: HttpResponse<ICoopted>) => {
-                            this.coopteds = [subRes.body].concat(res.body);
-                        },
-                        (subRes: HttpErrorResponse) => this.onError(subRes.message)
-                    );
-                }
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
+        if (this.cooptation.coopted && this.cooptation.coopted.id) {
+            this.cooptedService.find(this.cooptation.coopted.id).subscribe(
+                (subRes: HttpResponse<ICoopted>) => {
+                    this.cooptation.coopted = subRes.body;
+                },
+                (subRes: HttpErrorResponse) => this.onError(subRes.message)
+            );
+        }else{
+            this.cooptation.coopted = new Coopted(null,'','',new User());
+            this.cooptation.skills = [];
+        }
         this.coopterService.query().subscribe(
             (res: HttpResponse<ICoopter[]>) => {
                 this.coopters = res.body;
@@ -84,7 +72,6 @@ export class CooptationUpdateComponent implements OnInit {
 
     save() {
         this.isSaving = true;
-        this.cooptation.performedOn = this.performedOn != null ? moment(this.performedOn, DATE_TIME_FORMAT) : null;
         if (this.cooptation.id !== undefined) {
             this.subscribeToSaveResponse(this.cooptationService.update(this.cooptation));
         } else {
@@ -144,13 +131,7 @@ export class CooptationUpdateComponent implements OnInit {
                         prefix: term
                     }).pipe(
                         catchError(() => of([])),
-                        map((resp: HttpResponse<string[]>) => resp.body),
-                        map((suggestions: string[]) => {
-                            console.log(suggestions);
-                            const options = [];
-                            suggestions.forEach(suggestion => options.push({ name: suggestion }));
-                            return options;
-                        }))
+                        map((resp: HttpResponse<ISkill[]>) => resp.body))
                 ),
                 tap(() => this.skillsLoading = false)
             )

@@ -43,8 +43,8 @@ export class SkillService {
         return this.http.get<ISkill[]>(this.resourceSearchUrl, { params: options, observe: 'response' });
     }
 
-    suggest(req?: any): Observable<HttpResponse<string[]>> {
+    suggest(req?: any): Observable<HttpResponse<ISkill[]>> {
         const options = createRequestOption(req);
-        return this.http.get<string[]>(this.resourceSuggestUrl, { params: options, observe: 'response' });
+        return this.http.get<ISkill[]>(this.resourceSuggestUrl, { params: options, observe: 'response' });
     }
 }

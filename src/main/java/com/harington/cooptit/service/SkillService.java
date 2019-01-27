@@ -57,5 +57,5 @@ public interface SkillService {
      * 
      * @return the list of labels
      */
-    List<String> suggestLabels(String prefix) throws Exception;
+    List<Skill> suggestLabels(String prefix) throws Exception;
 }

@@ -28,7 +28,8 @@ public class Coopted implements Serializable {
     @Column(name = "linked_in")
     private String linkedIn;
 
-    @OneToOne    @JoinColumn(unique = true)
+    @OneToOne    
+    @JoinColumn(unique = true)
     private User user;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

@@ -131,10 +131,10 @@ public class UserService {
 
     public User createUser(UserDTO userDTO) {
         User user = new User();
-        user.setLogin(userDTO.getLogin().toLowerCase());
+        user.setLogin(Optional.ofNullable(userDTO.getLogin()).map(String::toLowerCase).orElse(userDTO.getFirstName()+"."+userDTO.getLastName()));
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
-        user.setEmail(userDTO.getEmail().toLowerCase());
+        user.setEmail(Optional.ofNullable(userDTO.getEmail()).map(String::toLowerCase).orElse(""));
         user.setImageUrl(userDTO.getImageUrl());
         if (userDTO.getLangKey() == null) {
             user.setLangKey(Constants.DEFAULT_LANGUAGE); // default language

@@ -32,7 +32,8 @@ public class Cooptation implements Serializable {
     @Column(name = "performed_on")
     private Instant performedOn;
 
-    @OneToOne    @JoinColumn(unique = true)
+    @OneToOne    
+    @JoinColumn(unique = true)
     private Coopted coopted;
 
     @ManyToOne

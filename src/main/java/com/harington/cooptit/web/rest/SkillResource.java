@@ -141,7 +141,7 @@ public class SkillResource {
      */
     @GetMapping("/_search/skills/labels")
     @Timed
-    public List<String> searchSkillsLabels(@RequestParam String prefix) throws Exception {
+    public List<Skill> searchSkillsLabels(@RequestParam String prefix) throws Exception {
         log.debug("REST request to search Skills' labels for prefix {}", prefix);
         return skillService.suggestLabels(prefix);
     }

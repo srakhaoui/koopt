@@ -15,38 +15,43 @@
                         [(ngModel)]="cooptation.profile" />
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" for="field_performedOn">Performed On</label>
-                    <div class="d-flex">
-                        <input id="field_performedOn" type="datetime-local" class="form-control" name="performedOn" [(ngModel)]="performedOn"
-                        />
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-control-label" for="field_coopted">Coopted</label>
-                    <select class="form-control" id="field_coopted" name="coopted" [(ngModel)]="cooptation.coopted">
-                        <option [ngValue]="null"></option>
-                        <option [ngValue]="cooptedOption.id === cooptation.coopted?.id ? cooptation.coopted : cooptedOption" *ngFor="let cooptedOption of coopteds; trackBy: trackCooptedById">{{cooptedOption.id}}</option>
-                    </select>
+                    <label class="form-control-label" for="field_lastName">Nom</label>
+                    <input type="text" class="form-control" name="lastName" id="field_lastName"   [(ngModel)]="cooptation.coopted.user.lastName" />
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" for="field_coopter">Coopter</label>
-                    <select class="form-control" id="field_coopter" name="coopter" [(ngModel)]="cooptation.coopter" >
-                        <option [ngValue]="null"></option>
-                        <option [ngValue]="coopterOption.id === cooptation.coopter?.id ? cooptation.coopter : coopterOption" *ngFor="let coopterOption of coopters; trackBy: trackCoopterById">{{coopterOption.id}}</option>
-                    </select>
+                    <label class="form-control-label" for="field_firstName">Pr&eacute;nom</label>
+                    <input type="text" class="form-control" name="firstName" id="field_firstName"
+                        [(ngModel)]="cooptation.coopted.user.firstName" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_email">Email</label>
+                    <input type="text" class="form-control" name="email" id="field_email"
+                        [(ngModel)]="cooptation.coopted.user.email" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_phoneNumber">T&eacute;l&eacute;phone</label>
+                    <input type="text" class="form-control" name="phoneNumber" id="field_phoneNumber"
+                        [(ngModel)]="cooptation.coopted.phoneNumber" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_linkedIn">Linked In</label>
+                    <input type="text" class="form-control" name="linkedIn" id="field_linkedIn"
+                           [(ngModel)]="cooptation.coopted.linkedIn" />
                 </div>
                 <div class="form-group">
                     <label for="field_skills">Skills:</label>
 					<ng-select [items]="skills$ | async"
-						bindLabel="name"
-           				bindValue="name"
+						bindLabel="label"
+						bindValue=""
 						[addTag]="true" [multiple]="true" [hideSelected]="true"
 						[loading]="skillsLoading" [typeahead]="skillsInput$"
-						[(ngModel)]="selectedSkills"
+						[(ngModel)]="cooptation.skills"
+						name="skills"
 						addTagText="">
 						</ng-select>
 				</div>
+				<p>{{cooptation.skills | json}}</p>
+				<p>{{cooptation.coopted.linkedIn | json}}</p>
             </div>
             <div>
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">

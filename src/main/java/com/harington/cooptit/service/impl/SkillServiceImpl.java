@@ -125,7 +125,7 @@ public class SkillServiceImpl implements SkillService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<String> suggestLabels(String prefix) throws Exception {
+    public List<Skill> suggestLabels(String prefix) throws Exception {
         log.debug("Request to search Skills' labels for prefix {}", prefix);
         
         final String suggestQuery = String.format("{ \"%s\": {  \"prefix\" : \"%s\", \"completion\" : { \"field\" : \"%s\"  }}}", LABEL_SUGGEST, prefix, SkillEs.COMPLETION_FIELD);
@@ -134,11 +134,17 @@ public class SkillServiceImpl implements SkillService {
 
         final SuggestResult result = jestClient.execute(suggest);
         
-        final List<String> labelSuggestions = new ArrayList<>();
-        final Optional<Suggestion> suggestionOptional = Optional.ofNullable(result.getSuggestions(LABEL_SUGGEST)).map(aSuggestion -> aSuggestion.get(0));
+        final List<Skill> labelSuggestions = new ArrayList<>();
+        final Optional<Suggestion> suggestionOptional = Optional.ofNullable(result.getSuggestions(LABEL_SUGGEST))
+        		.filter(aSuggestion -> !aSuggestion.isEmpty())
+        		.map(aSuggestion -> aSuggestion.get(0));
         suggestionOptional.ifPresent(suggestion -> 
-        	suggestion.options.stream().forEach(option -> 
-        		labelSuggestions.add((String) option.get("text"))
+        	suggestion.options.stream().forEach(option -> {
+        			final Skill skill = new Skill();
+        			skill.setId(Long.parseLong((String) option.get("_id")));
+        			skill.setLabel((String) option.get("text"));
+        			labelSuggestions.add(skill);
+        		}
         	)	
         );
         return labelSuggestions;
