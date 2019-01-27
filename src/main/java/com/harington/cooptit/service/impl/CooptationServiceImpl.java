@@ -62,10 +62,12 @@ public class CooptationServiceImpl implements CooptationService {
     @Override
     public Cooptation save(Cooptation cooptation) {
         log.debug("Request to save Cooptation : {}", cooptation);
-        User cooptedUser = cooptation.getCoopted().getUser();
-		cooptedUser = userService.createUser(new UserDTO(cooptedUser));
-        cooptation.getCoopted().setUser(cooptedUser);
-        cooptedRepository.save(cooptation.getCoopted());
+        if(cooptation.getCoopted().getId()==null){
+        	User cooptedUser = cooptation.getCoopted().getUser();
+    		cooptedUser = userService.createUser(new UserDTO(cooptedUser));
+    		cooptation.getCoopted().setUser(cooptedUser);
+        	cooptedRepository.save(cooptation.getCoopted());
+        }
         cooptation.setPerformedOn(Instant.now());
         final Set<Skill> skills = cooptation.getSkills().stream().map(skill -> skill.getId() == null ? skillService.save(skill) : skill).collect(Collectors.toSet());
         cooptation.setSkills(skills);

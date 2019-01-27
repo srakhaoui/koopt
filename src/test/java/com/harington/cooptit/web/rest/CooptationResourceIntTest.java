@@ -1,12 +1,29 @@
 package com.harington.cooptit.web.rest;
 
-import com.harington.cooptit.CooptitApp;
+import static com.harington.cooptit.web.rest.TestUtil.createFormattingConversionService;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.harington.cooptit.domain.Cooptation;
-import com.harington.cooptit.repository.CooptationRepository;
-import com.harington.cooptit.repository.search.CooptationSearchRepository;
-import com.harington.cooptit.service.CooptationService;
-import com.harington.cooptit.web.rest.errors.ExceptionTranslator;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,21 +42,17 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-
-import static com.harington.cooptit.web.rest.TestUtil.createFormattingConversionService;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
-import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.harington.cooptit.CooptitApp;
+import com.harington.cooptit.domain.Cooptation;
+import com.harington.cooptit.domain.Coopted;
+import com.harington.cooptit.domain.User;
+import com.harington.cooptit.repository.CooptationRepository;
+import com.harington.cooptit.repository.CooptedRepository;
+import com.harington.cooptit.repository.search.CooptationSearchRepository;
+import com.harington.cooptit.service.CooptationService;
+import com.harington.cooptit.service.UserService;
+import com.harington.cooptit.service.dto.UserDTO;
+import com.harington.cooptit.web.rest.errors.ExceptionTranslator;
 
 /**
  * Test class for the CooptationResource REST controller.
@@ -56,6 +69,12 @@ public class CooptationResourceIntTest {
     private static final Instant DEFAULT_PERFORMED_ON = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_PERFORMED_ON = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
+    @Autowired
+    private UserService userService;
+    
+    @Autowired
+    private CooptedRepository cooptedRepository;
+    
     @Autowired
     private CooptationRepository cooptationRepository;
 
@@ -111,9 +130,14 @@ public class CooptationResourceIntTest {
      * if they test an entity which requires the current entity.
      */
     public static Cooptation createEntity(EntityManager em) {
-        Cooptation cooptation = new Cooptation()
+    	final User user = new User();
+    	user.setFirstName("firstName");
+    	user.setLastName("lastName");
+    	user.setEmail("user@email.com");
+    	Cooptation cooptation = new Cooptation()
             .profile(DEFAULT_PROFILE)
-            .performedOn(DEFAULT_PERFORMED_ON);
+            .performedOn(DEFAULT_PERFORMED_ON)
+            .coopted(new Coopted().phoneNumber("0102030405").user(user));
         return cooptation;
     }
 
@@ -138,7 +162,7 @@ public class CooptationResourceIntTest {
         assertThat(cooptationList).hasSize(databaseSizeBeforeCreate + 1);
         Cooptation testCooptation = cooptationList.get(cooptationList.size() - 1);
         assertThat(testCooptation.getProfile()).isEqualTo(DEFAULT_PROFILE);
-        assertThat(testCooptation.getPerformedOn()).isEqualTo(DEFAULT_PERFORMED_ON);
+        assertThat(testCooptation.getPerformedOn()).isAfter(DEFAULT_PERFORMED_ON);
 
         // Validate the Cooptation in Elasticsearch
         verify(mockCooptationSearchRepository, times(1)).save(testCooptation);
@@ -170,6 +194,8 @@ public class CooptationResourceIntTest {
     @Transactional
     public void getAllCooptations() throws Exception {
         // Initialize the database
+    	final User user = userService.createUser(new UserDTO(cooptation.getCoopted().getUser()));
+    	cooptedRepository.saveAndFlush(cooptation.getCoopted().user(user));
         cooptationRepository.saveAndFlush(cooptation);
 
         // Get all the cooptationList
@@ -216,8 +242,10 @@ public class CooptationResourceIntTest {
     @Transactional
     public void getCooptation() throws Exception {
         // Initialize the database
+    	final User user = userService.createUser(new UserDTO(cooptation.getCoopted().getUser()));
+    	cooptedRepository.saveAndFlush(cooptation.getCoopted().user(user));
         cooptationRepository.saveAndFlush(cooptation);
-
+        
         // Get the cooptation
         restCooptationMockMvc.perform(get("/api/cooptations/{id}", cooptation.getId()))
             .andExpect(status().isOk())
@@ -239,7 +267,9 @@ public class CooptationResourceIntTest {
     @Transactional
     public void updateCooptation() throws Exception {
         // Initialize the database
-        cooptationService.save(cooptation);
+    	final User user = userService.createUser(new UserDTO(cooptation.getCoopted().getUser()));
+    	final Coopted coopted = cooptedRepository.saveAndFlush(cooptation.getCoopted().user(user));
+        cooptationRepository.saveAndFlush(cooptation.coopted(coopted));
         // As the test used the service layer, reset the Elasticsearch mock repository
         reset(mockCooptationSearchRepository);
 
@@ -263,7 +293,7 @@ public class CooptationResourceIntTest {
         assertThat(cooptationList).hasSize(databaseSizeBeforeUpdate);
         Cooptation testCooptation = cooptationList.get(cooptationList.size() - 1);
         assertThat(testCooptation.getProfile()).isEqualTo(UPDATED_PROFILE);
-        assertThat(testCooptation.getPerformedOn()).isEqualTo(UPDATED_PERFORMED_ON);
+        assertThat(testCooptation.getPerformedOn()).isAfter(UPDATED_PERFORMED_ON);
 
         // Validate the Cooptation in Elasticsearch
         verify(mockCooptationSearchRepository, times(1)).save(testCooptation);
@@ -324,7 +354,7 @@ public class CooptationResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(cooptation.getId().intValue())))
             .andExpect(jsonPath("$.[*].profile").value(hasItem(DEFAULT_PROFILE.toString())))
-            .andExpect(jsonPath("$.[*].performedOn").value(hasItem(DEFAULT_PERFORMED_ON.toString())));
+            .andExpect(jsonPath("$.[*].performedOn").value(hasItem(cooptation.getPerformedOn().toString())));
     }
 
     @Test
