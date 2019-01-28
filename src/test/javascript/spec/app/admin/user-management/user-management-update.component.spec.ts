@@ -13,7 +13,7 @@ describe('Component Tests', () => {
         let fixture: ComponentFixture<UserMgmtUpdateComponent>;
         let service: UserService;
         const route = ({
-            data: of({ user: new User(1, 'user', 'first', 'last', 'first@last.com', true, 'en', ['ROLE_USER'], 'admin', null, null, null) })
+            data: of({ user: new User(1, 'user', 'first', 'last', 'first@last.com', true, 'en', ['ROLE_COOPTER', 'ROLE_RECRUTER'], 'admin', null, null, null) })
         } as any) as ActivatedRoute;
 
         beforeEach(async(() => {
@@ -42,14 +42,14 @@ describe('Component Tests', () => {
                 [],
                 fakeAsync(() => {
                     // GIVEN
-                    spyOn(service, 'authorities').and.returnValue(of(['USER']));
+                    spyOn(service, 'authorities').and.returnValue(of(['COOPTER','RECRUTER']));
 
                     // WHEN
                     comp.ngOnInit();
 
                     // THEN
                     expect(service.authorities).toHaveBeenCalled();
-                    expect(comp.authorities).toEqual(['USER']);
+                    expect(comp.authorities).toEqual(['COOPTER','RECRUTER']);
                 })
             ));
         });

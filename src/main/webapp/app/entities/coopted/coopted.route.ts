@@ -30,7 +30,7 @@ export const cooptedRoute: Routes = [
         path: 'coopted',
         component: CooptedComponent,
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_COOPTER', 'ROLE_RECRUTER'],
             pageTitle: 'Coopteds'
         },
         canActivate: [UserRouteAccessService]
@@ -42,7 +42,7 @@ export const cooptedRoute: Routes = [
             coopted: CooptedResolve
         },
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_COOPTER', 'ROLE_RECRUTER'],
             pageTitle: 'Coopteds'
         },
         canActivate: [UserRouteAccessService]
@@ -54,7 +54,7 @@ export const cooptedRoute: Routes = [
             coopted: CooptedResolve
         },
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_COOPTER', 'ROLE_RECRUTER'],
             pageTitle: 'Coopteds'
         },
         canActivate: [UserRouteAccessService]
@@ -66,7 +66,7 @@ export const cooptedRoute: Routes = [
             coopted: CooptedResolve
         },
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_COOPTER', 'ROLE_RECRUTER'],
             pageTitle: 'Coopteds'
         },
         canActivate: [UserRouteAccessService]
@@ -81,7 +81,7 @@ export const cooptedPopupRoute: Routes = [
             coopted: CooptedResolve
         },
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_COOPTER', 'ROLE_RECRUTER'],
             pageTitle: 'Coopteds'
         },
         canActivate: [UserRouteAccessService],

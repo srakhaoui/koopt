@@ -30,7 +30,7 @@ export const skillRoute: Routes = [
         path: 'skill',
         component: SkillComponent,
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_COOPTER', 'ROLE_RECRUTER'],
             pageTitle: 'Skills'
         },
         canActivate: [UserRouteAccessService]
@@ -42,7 +42,7 @@ export const skillRoute: Routes = [
             skill: SkillResolve
         },
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_COOPTER', 'ROLE_RECRUTER'],
             pageTitle: 'Skills'
         },
         canActivate: [UserRouteAccessService]
@@ -54,7 +54,7 @@ export const skillRoute: Routes = [
             skill: SkillResolve
         },
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_COOPTER', 'ROLE_RECRUTER'],
             pageTitle: 'Skills'
         },
         canActivate: [UserRouteAccessService]
@@ -66,7 +66,7 @@ export const skillRoute: Routes = [
             skill: SkillResolve
         },
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_COOPTER', 'ROLE_RECRUTER'],
             pageTitle: 'Skills'
         },
         canActivate: [UserRouteAccessService]
@@ -81,7 +81,7 @@ export const skillPopupRoute: Routes = [
             skill: SkillResolve
         },
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_COOPTER', 'ROLE_RECRUTER'],
             pageTitle: 'Skills'
         },
         canActivate: [UserRouteAccessService],
