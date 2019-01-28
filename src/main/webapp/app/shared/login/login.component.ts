@@ -68,7 +68,7 @@ export class JhiLoginModalComponent implements AfterViewInit {
                         if (result1) {
                             this.router.navigate(['/admin/user-management']);
                         } else {
-                            this.principal.hasAnyAuthority(['ROLE_USER']).then(result2 => {
+                            this.principal.hasAnyAuthority(['ROLE_COOPTER','ROLE_RECRUTER']).then(result2 => {
                                 if (result2) {
                                     this.router.navigate(['/cooptation']);
                                 } else {

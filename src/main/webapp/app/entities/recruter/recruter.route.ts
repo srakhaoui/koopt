@@ -30,7 +30,7 @@ export const recruterRoute: Routes = [
         path: 'recruter',
         component: RecruterComponent,
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_RECRUTER'],
             pageTitle: 'Recruters'
         },
         canActivate: [UserRouteAccessService]
@@ -42,7 +42,7 @@ export const recruterRoute: Routes = [
             recruter: RecruterResolve
         },
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_RECRUTER'],
             pageTitle: 'Recruters'
         },
         canActivate: [UserRouteAccessService]
@@ -54,7 +54,7 @@ export const recruterRoute: Routes = [
             recruter: RecruterResolve
         },
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_RECRUTER'],
             pageTitle: 'Recruters'
         },
         canActivate: [UserRouteAccessService]
@@ -66,7 +66,7 @@ export const recruterRoute: Routes = [
             recruter: RecruterResolve
         },
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_RECRUTER'],
             pageTitle: 'Recruters'
         },
         canActivate: [UserRouteAccessService]
@@ -81,7 +81,7 @@ export const recruterPopupRoute: Routes = [
             recruter: RecruterResolve
         },
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_RECRUTER'],
             pageTitle: 'Recruters'
         },
         canActivate: [UserRouteAccessService],

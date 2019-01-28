@@ -15,7 +15,7 @@ import { ICoopter } from 'app/shared/model/coopter.model';
 import { CoopterService } from 'app/entities/coopter';
 import { ISkill } from 'app/shared/model/skill.model';
 import { SkillService } from 'app/entities/skill';
-import {User} from 'app/core';
+import { User } from 'app/core';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.Default,
@@ -26,7 +26,6 @@ import {User} from 'app/core';
 export class CooptationUpdateComponent implements OnInit {
     cooptation: ICooptation;
     isSaving: boolean;
-    coopters: ICoopter[];
 
     skills$: Observable<ISkill[]>;
     skillsLoading = false;
@@ -36,7 +35,6 @@ export class CooptationUpdateComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private cooptationService: CooptationService,
         private cooptedService: CooptedService,
-        private coopterService: CoopterService,
         private skillService: SkillService,
         private activatedRoute: ActivatedRoute
     ) {}
@@ -57,12 +55,6 @@ export class CooptationUpdateComponent implements OnInit {
             this.cooptation.coopted = new Coopted(null,'','',new User());
             this.cooptation.skills = [];
         }
-        this.coopterService.query().subscribe(
-            (res: HttpResponse<ICoopter[]>) => {
-                this.coopters = res.body;
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
         this.loadSkills();
     }
 
@@ -117,9 +109,9 @@ export class CooptationUpdateComponent implements OnInit {
             }
         }
         return option;
-    }
-
-    private loadSkills() {
+   }
+    
+   private loadSkills() {
         this.skills$ = concat(
             of([]), // default items
             this.skillsInput$.pipe(
