@@ -19,6 +19,8 @@ public interface CooptationService {
      * @return the persisted entity
      */
     Cooptation save(Cooptation cooptation);
+    
+    void setUserService(UserService userService);
 
     /**
      * Get all the cooptations.
