@@ -8,7 +8,6 @@ import { map } from 'rxjs/operators';
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared';
 import { ICooptation } from 'app/shared/model/cooptation.model';
-import { ISkill } from 'app/shared/model/skill.model';
 
 type EntityResponseType = HttpResponse<ICooptation>;
 type EntityArrayResponseType = HttpResponse<ICooptation[]>;
@@ -62,18 +61,6 @@ export class CooptationService {
         const copy: ICooptation = Object.assign({}, cooptation, {
             performedOn: cooptation.performedOn != null && cooptation.performedOn.isValid() ? cooptation.performedOn.toJSON() : null
         });
-        const skills: Array<ISkill> = [];
-        copy.skills.forEach(skill => {
-            if(typeof skill === 'string'){
-              skills.push({code: (<string>skill).trim(), label: skill});
-            }else{
-              if(skill.id === undefined && skill.label != null){
-                  skill.code = skill.label.replace(' ','');
-              }
-              skills.push(skill);
-            }
-        });
-        copy.skills = skills;
         return copy;
     }
 

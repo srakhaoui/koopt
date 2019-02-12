@@ -9,13 +9,9 @@ import { JhiAlertService } from 'ng-jhipster';
 
 import { ICooptation } from 'app/shared/model/cooptation.model';
 import { CooptationService } from './cooptation.service';
-import {Coopted, ICoopted} from 'app/shared/model/coopted.model';
-import { CooptedService } from 'app/entities/coopted';
-import { ICoopter } from 'app/shared/model/coopter.model';
-import { CoopterService } from 'app/entities/coopter';
 import { ISkill } from 'app/shared/model/skill.model';
 import { SkillService } from 'app/entities/skill';
-import { User } from 'app/core';
+import { User, IUser } from 'app/core';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.Default,
@@ -34,7 +30,6 @@ export class CooptationUpdateComponent implements OnInit {
     constructor(
         private jhiAlertService: JhiAlertService,
         private cooptationService: CooptationService,
-        private cooptedService: CooptedService,
         private skillService: SkillService,
         private activatedRoute: ActivatedRoute
     ) {}
@@ -44,17 +39,6 @@ export class CooptationUpdateComponent implements OnInit {
         this.activatedRoute.data.subscribe(({ cooptation }) => {
             this.cooptation = cooptation;
         });
-        if (this.cooptation.coopted && this.cooptation.coopted.id) {
-            this.cooptedService.find(this.cooptation.coopted.id).subscribe(
-                (subRes: HttpResponse<ICoopted>) => {
-                    this.cooptation.coopted = subRes.body;
-                },
-                (subRes: HttpErrorResponse) => this.onError(subRes.message)
-            );
-        }else{
-            this.cooptation.coopted = new Coopted(null,'','',new User());
-            this.cooptation.skills = [];
-        }
         this.loadSkills();
     }
 
@@ -86,14 +70,6 @@ export class CooptationUpdateComponent implements OnInit {
 
     private onError(errorMessage: string) {
         this.jhiAlertService.error(errorMessage, null, null);
-    }
-
-    trackCooptedById(index: number, item: ICoopted) {
-        return item.id;
-    }
-
-    trackCoopterById(index: number, item: ICoopter) {
-        return item.id;
     }
 
     trackSkillById(index: number, item: ISkill) {

@@ -32,7 +32,11 @@
             <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="profile"><span>Profile</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="performedOn"><span>Performed On</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="coopted.id"><span>Coopted</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="phoneNumber"><span>Phone Number</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="linkedIn"><span>Linked In</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="firstName"><span>First Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="lastName"><span>Last Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="email"><span>Email</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="coopter.id"><span>Coopter</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
@@ -42,15 +46,13 @@
                 <td><a [routerLink]="['/cooptation', cooptation.id, 'view' ]">{{cooptation.id}}</a></td>
                 <td>{{cooptation.profile}}</td>
                 <td>{{cooptation.performedOn | date:'medium'}}</td>
+                <td>{{cooptation.phoneNumber}}</td>
+                <td>{{cooptation.linkedIn}}</td>
+                <td>{{cooptation.firstName}}</td>
+                <td>{{cooptation.lastName}}</td>
+                <td>{{cooptation.email}}</td>
                 <td>
-                    <div *ngIf="cooptation.coopted">
-                        <a [routerLink]="['../coopted', cooptation.coopted?.id, 'view' ]" >{{cooptation.coopted?.id}}</a>
-                    </div>
-                </td>
-                <td>
-                    <div *ngIf="cooptation.coopter">
-                        <a [routerLink]="['../coopter', cooptation.coopter?.id, 'view' ]" >{{cooptation.coopter?.id}}</a>
-                    </div>
+                    {{cooptation.coopter?.id}}
                 </td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">

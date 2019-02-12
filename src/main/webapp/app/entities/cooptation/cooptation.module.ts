@@ -2,6 +2,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { CooptitSharedModule } from 'app/shared';
+import { CooptitAdminModule } from 'app/admin/admin.module';
 import {
     CooptationComponent,
     CooptationDetailComponent,
@@ -15,7 +16,7 @@ import {
 const ENTITY_STATES = [...cooptationRoute, ...cooptationPopupRoute];
 
 @NgModule({
-    imports: [CooptitSharedModule, RouterModule.forChild(ENTITY_STATES)],
+    imports: [CooptitSharedModule, CooptitAdminModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         CooptationComponent,
         CooptationDetailComponent,

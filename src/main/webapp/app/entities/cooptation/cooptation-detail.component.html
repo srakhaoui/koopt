@@ -13,17 +13,29 @@
                 <dd>
                     <span>{{cooptation.performedOn}}</span>
                 </dd>
-                <dt><span>Coopted</span></dt>
+                <dt><span>Phone Number</span></dt>
                 <dd>
-                    <div *ngIf="cooptation.coopted">
-                        <a [routerLink]="['/coopted', cooptation.coopted?.id, 'view']">{{cooptation.coopted?.id}}</a>
-                    </div>
+                    <span>{{cooptation.phoneNumber}}</span>
+                </dd>
+                <dt><span>Linked In</span></dt>
+                <dd>
+                    <span>{{cooptation.linkedIn}}</span>
+                </dd>
+                <dt><span>First Name</span></dt>
+                <dd>
+                    <span>{{cooptation.firstName}}</span>
+                </dd>
+                <dt><span>Last Name</span></dt>
+                <dd>
+                    <span>{{cooptation.lastName}}</span>
+                </dd>
+                <dt><span>Email</span></dt>
+                <dd>
+                    <span>{{cooptation.email}}</span>
                 </dd>
                 <dt><span>Coopter</span></dt>
                 <dd>
-                    <div *ngIf="cooptation.coopter">
-                        <a [routerLink]="['/coopter', cooptation.coopter?.id, 'view']">{{cooptation.coopter?.id}}</a>
-                    </div>
+                    {{cooptation.coopter?.id}}
                 </dd>
                 <dt><span>Skills</span></dt>
                 <dd>

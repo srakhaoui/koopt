@@ -28,9 +28,27 @@
             <column name="performed_on" type="datetime">
                 <constraints nullable="true" />
             </column>
-            <column name="coopted_id" type="bigint">
-                <constraints unique="true" nullable="true" uniqueConstraintName="ux_cooptation_coopted_id" />
+
+            <column name="phone_number" type="varchar(255)">
+                <constraints nullable="true" />
             </column>
+
+            <column name="linked_in" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="first_name" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="last_name" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="email" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
             <column name="coopter_id" type="bigint">
                 <constraints nullable="true" />
             </column>

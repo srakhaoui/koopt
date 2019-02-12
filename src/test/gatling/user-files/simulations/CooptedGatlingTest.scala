@@ -74,6 +74,9 @@ class CooptedGatlingTest extends Simulation {
                 "id":null
                 , "phoneNumber":"SAMPLE_TEXT"
                 , "linkedIn":"SAMPLE_TEXT"
+                , "firstName":"SAMPLE_TEXT"
+                , "lastName":"SAMPLE_TEXT"
+                , "email":"SAMPLE_TEXT"
                 }""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_coopted_url"))).exitHereIfFailed

@@ -17,6 +17,9 @@ import java.util.Optional;
 @Repository
 public interface CooptationRepository extends JpaRepository<Cooptation, Long> {
 
+    @Query("select cooptation from Cooptation cooptation where cooptation.coopter.login = ?#{principal.username}")
+    List<Cooptation> findByCoopterIsCurrentUser();
+
     @Query(value = "select distinct cooptation from Cooptation cooptation left join fetch cooptation.skills",
         countQuery = "select count(distinct cooptation) from Cooptation cooptation")
     Page<Cooptation> findAllWithEagerRelationships(Pageable pageable);

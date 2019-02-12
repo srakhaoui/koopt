@@ -8,17 +8,11 @@
     -->
     <changeSet id="20181016213134-2" author="jhipster">
         
-        <addForeignKeyConstraint baseColumnNames="coopted_id"
-                                 baseTableName="cooptation"
-                                 constraintName="fk_cooptation_coopted_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="coopted"/>
-
         <addForeignKeyConstraint baseColumnNames="coopter_id"
                                  baseTableName="cooptation"
                                  constraintName="fk_cooptation_coopter_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="coopter"/>
+                                 referencedTableName="jhi_user"/>
 
         <addForeignKeyConstraint baseColumnNames="cooptations_id"
                                  baseTableName="cooptation_skills"

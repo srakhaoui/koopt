@@ -28,7 +28,11 @@ export class CooptationUpdatePage {
     cancelButton = element(by.id('cancel-save'));
     profileInput = element(by.id('field_profile'));
     performedOnInput = element(by.id('field_performedOn'));
-    cooptedSelect = element(by.id('field_coopted'));
+    phoneNumberInput = element(by.id('field_phoneNumber'));
+    linkedInInput = element(by.id('field_linkedIn'));
+    firstNameInput = element(by.id('field_firstName'));
+    lastNameInput = element(by.id('field_lastName'));
+    emailInput = element(by.id('field_email'));
     coopterSelect = element(by.id('field_coopter'));
     skillsSelect = element(by.id('field_skills'));
 
@@ -52,23 +56,44 @@ export class CooptationUpdatePage {
         return this.performedOnInput.getAttribute('value');
     }
 
-    async cooptedSelectLastOption() {
-        await this.cooptedSelect
-            .all(by.tagName('option'))
-            .last()
-            .click();
+    async setPhoneNumberInput(phoneNumber) {
+        await this.phoneNumberInput.sendKeys(phoneNumber);
     }
 
-    async cooptedSelectOption(option) {
-        await this.cooptedSelect.sendKeys(option);
+    async getPhoneNumberInput() {
+        return this.phoneNumberInput.getAttribute('value');
     }
 
-    getCooptedSelect(): ElementFinder {
-        return this.cooptedSelect;
+    async setLinkedInInput(linkedIn) {
+        await this.linkedInInput.sendKeys(linkedIn);
     }
 
-    async getCooptedSelectedOption() {
-        return this.cooptedSelect.element(by.css('option:checked')).getText();
+    async getLinkedInInput() {
+        return this.linkedInInput.getAttribute('value');
+    }
+
+    async setFirstNameInput(firstName) {
+        await this.firstNameInput.sendKeys(firstName);
+    }
+
+    async getFirstNameInput() {
+        return this.firstNameInput.getAttribute('value');
+    }
+
+    async setLastNameInput(lastName) {
+        await this.lastNameInput.sendKeys(lastName);
+    }
+
+    async getLastNameInput() {
+        return this.lastNameInput.getAttribute('value');
+    }
+
+    async setEmailInput(email) {
+        await this.emailInput.sendKeys(email);
+    }
+
+    async getEmailInput() {
+        return this.emailInput.getAttribute('value');
     }
 
     async coopterSelectLastOption() {

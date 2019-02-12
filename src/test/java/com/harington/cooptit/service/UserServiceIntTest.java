@@ -1,12 +1,15 @@
 package com.harington.cooptit.service;
 
-import com.harington.cooptit.CooptitApp;
-import com.harington.cooptit.config.Constants;
-import com.harington.cooptit.domain.User;
-import com.harington.cooptit.repository.search.UserSearchRepository;
-import com.harington.cooptit.repository.UserRepository;
-import com.harington.cooptit.service.dto.UserDTO;
-import com.harington.cooptit.service.util.RandomUtil;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
@@ -22,18 +25,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import com.harington.cooptit.CooptitApp;
+import com.harington.cooptit.config.Constants;
+import com.harington.cooptit.domain.User;
+import com.harington.cooptit.repository.UserRepository;
+import com.harington.cooptit.repository.search.UserSearchRepository;
+import com.harington.cooptit.service.dto.UserDTO;
+import com.harington.cooptit.service.util.RandomUtil;
 
 /**
  * Test class for the UserResource REST controller.

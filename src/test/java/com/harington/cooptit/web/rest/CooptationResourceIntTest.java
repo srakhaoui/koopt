@@ -22,6 +22,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 
@@ -31,6 +32,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -44,10 +46,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.harington.cooptit.CooptitApp;
 import com.harington.cooptit.domain.Cooptation;
-import com.harington.cooptit.domain.Coopted;
 import com.harington.cooptit.domain.User;
 import com.harington.cooptit.repository.CooptationRepository;
-import com.harington.cooptit.repository.CooptedRepository;
+import com.harington.cooptit.repository.UserRepository;
 import com.harington.cooptit.repository.search.CooptationSearchRepository;
 import com.harington.cooptit.service.CooptationService;
 import com.harington.cooptit.service.UserService;
@@ -69,24 +70,43 @@ public class CooptationResourceIntTest {
     private static final Instant DEFAULT_PERFORMED_ON = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_PERFORMED_ON = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
-    @Autowired
-    private UserService userService;
-    
-    @Autowired
-    private CooptedRepository cooptedRepository;
-    
+    private static final String DEFAULT_PHONE_NUMBER = "AAAAAAAAAA";
+    private static final String UPDATED_PHONE_NUMBER = "BBBBBBBBBB";
+
+    private static final String DEFAULT_LINKED_IN = "AAAAAAAAAA";
+    private static final String UPDATED_LINKED_IN = "BBBBBBBBBB";
+
+    private static final String DEFAULT_FIRST_NAME = "AAAAAAAAAA";
+    private static final String UPDATED_FIRST_NAME = "BBBBBBBBBB";
+
+    private static final String DEFAULT_LAST_NAME = "AAAAAAAAAA";
+    private static final String UPDATED_LAST_NAME = "BBBBBBBBBB";
+
+    private static final String DEFAULT_EMAIL = "AAAAAAAAAA";
+    private static final String UPDATED_EMAIL = "BBBBBBBBBB";
+
     @Autowired
     private CooptationRepository cooptationRepository;
 
     @Mock
     private CooptationRepository cooptationRepositoryMock;
     
-
+    @Autowired
+    private UserRepository userRepository;
+    
     @Mock
     private CooptationService cooptationServiceMock;
-
+    
     @Autowired
     private CooptationService cooptationService;
+    
+    /**
+     * This repository is mocked in the com.harington.cooptit.service test package.
+     *
+     * @see com.harington.cooptit.service.UserServiceMockConfiguration
+     */
+    @Mock
+    private UserService userService;
 
     /**
      * This repository is mocked in the com.harington.cooptit.repository.search test package.
@@ -130,14 +150,21 @@ public class CooptationResourceIntTest {
      * if they test an entity which requires the current entity.
      */
     public static Cooptation createEntity(EntityManager em) {
-    	final User user = new User();
-    	user.setFirstName("firstName");
-    	user.setLastName("lastName");
-    	user.setEmail("user@email.com");
-    	Cooptation cooptation = new Cooptation()
+    	User coopter = new User();
+    	coopter.setFirstName("firstName");
+    	coopter.setLastName("lastName");
+    	coopter.setLogin("login");
+    	coopter.setEmail("email@email.fr");
+    	coopter.setPassword("pppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp");
+        Cooptation cooptation = new Cooptation()
             .profile(DEFAULT_PROFILE)
             .performedOn(DEFAULT_PERFORMED_ON)
-            .coopted(new Coopted().phoneNumber("0102030405").user(user));
+            .phoneNumber(DEFAULT_PHONE_NUMBER)
+            .linkedIn(DEFAULT_LINKED_IN)
+            .firstName(DEFAULT_FIRST_NAME)
+            .lastName(DEFAULT_LAST_NAME)
+            .email(DEFAULT_EMAIL)
+            .coopter(coopter);
         return cooptation;
     }
 
@@ -151,6 +178,9 @@ public class CooptationResourceIntTest {
     public void createCooptation() throws Exception {
         int databaseSizeBeforeCreate = cooptationRepository.findAll().size();
 
+        final User coopter = userRepository.save(cooptation.getCoopter());
+    	when(userService.getUserWithAuthorities()).thenReturn(Optional.ofNullable(coopter));
+    	cooptationService.setUserService(userService);
         // Create the Cooptation
         restCooptationMockMvc.perform(post("/api/cooptations")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -162,7 +192,12 @@ public class CooptationResourceIntTest {
         assertThat(cooptationList).hasSize(databaseSizeBeforeCreate + 1);
         Cooptation testCooptation = cooptationList.get(cooptationList.size() - 1);
         assertThat(testCooptation.getProfile()).isEqualTo(DEFAULT_PROFILE);
-        assertThat(testCooptation.getPerformedOn()).isAfter(DEFAULT_PERFORMED_ON);
+        assertThat(testCooptation.getPerformedOn()).isAfterOrEqualTo(DEFAULT_PERFORMED_ON);
+        assertThat(testCooptation.getPhoneNumber()).isEqualTo(DEFAULT_PHONE_NUMBER);
+        assertThat(testCooptation.getLinkedIn()).isEqualTo(DEFAULT_LINKED_IN);
+        assertThat(testCooptation.getFirstName()).isEqualTo(DEFAULT_FIRST_NAME);
+        assertThat(testCooptation.getLastName()).isEqualTo(DEFAULT_LAST_NAME);
+        assertThat(testCooptation.getEmail()).isEqualTo(DEFAULT_EMAIL);
 
         // Validate the Cooptation in Elasticsearch
         verify(mockCooptationSearchRepository, times(1)).save(testCooptation);
@@ -194,8 +229,8 @@ public class CooptationResourceIntTest {
     @Transactional
     public void getAllCooptations() throws Exception {
         // Initialize the database
-    	final User user = userService.createUser(new UserDTO(cooptation.getCoopted().getUser()));
-    	cooptedRepository.saveAndFlush(cooptation.getCoopted().user(user));
+    	final User coopter = userService.createUser(new UserDTO(cooptation.getCoopter()));
+    	cooptation.setCoopter(coopter);
         cooptationRepository.saveAndFlush(cooptation);
 
         // Get all the cooptationList
@@ -204,7 +239,12 @@ public class CooptationResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(cooptation.getId().intValue())))
             .andExpect(jsonPath("$.[*].profile").value(hasItem(DEFAULT_PROFILE.toString())))
-            .andExpect(jsonPath("$.[*].performedOn").value(hasItem(DEFAULT_PERFORMED_ON.toString())));
+            .andExpect(jsonPath("$.[*].performedOn").value(hasItem(DEFAULT_PERFORMED_ON.toString())))
+            .andExpect(jsonPath("$.[*].phoneNumber").value(hasItem(DEFAULT_PHONE_NUMBER.toString())))
+            .andExpect(jsonPath("$.[*].linkedIn").value(hasItem(DEFAULT_LINKED_IN.toString())))
+            .andExpect(jsonPath("$.[*].firstName").value(hasItem(DEFAULT_FIRST_NAME.toString())))
+            .andExpect(jsonPath("$.[*].lastName").value(hasItem(DEFAULT_LAST_NAME.toString())))
+            .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL.toString())));
     }
     
     public void getAllCooptationsWithEagerRelationshipsIsEnabled() throws Exception {
@@ -242,17 +282,22 @@ public class CooptationResourceIntTest {
     @Transactional
     public void getCooptation() throws Exception {
         // Initialize the database
-    	final User user = userService.createUser(new UserDTO(cooptation.getCoopted().getUser()));
-    	cooptedRepository.saveAndFlush(cooptation.getCoopted().user(user));
+    	final User coopter = userService.createUser(new UserDTO(cooptation.getCoopter()));
+    	cooptation.setCoopter(coopter);
         cooptationRepository.saveAndFlush(cooptation);
-        
+
         // Get the cooptation
         restCooptationMockMvc.perform(get("/api/cooptations/{id}", cooptation.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(cooptation.getId().intValue()))
             .andExpect(jsonPath("$.profile").value(DEFAULT_PROFILE.toString()))
-            .andExpect(jsonPath("$.performedOn").value(DEFAULT_PERFORMED_ON.toString()));
+            .andExpect(jsonPath("$.performedOn").value(DEFAULT_PERFORMED_ON.toString()))
+            .andExpect(jsonPath("$.phoneNumber").value(DEFAULT_PHONE_NUMBER.toString()))
+            .andExpect(jsonPath("$.linkedIn").value(DEFAULT_LINKED_IN.toString()))
+            .andExpect(jsonPath("$.firstName").value(DEFAULT_FIRST_NAME.toString()))
+            .andExpect(jsonPath("$.lastName").value(DEFAULT_LAST_NAME.toString()))
+            .andExpect(jsonPath("$.email").value(DEFAULT_EMAIL.toString()));
     }
 
     @Test
@@ -267,9 +312,11 @@ public class CooptationResourceIntTest {
     @Transactional
     public void updateCooptation() throws Exception {
         // Initialize the database
-    	final User user = userService.createUser(new UserDTO(cooptation.getCoopted().getUser()));
-    	final Coopted coopted = cooptedRepository.saveAndFlush(cooptation.getCoopted().user(user));
-        cooptationRepository.saveAndFlush(cooptation.coopted(coopted));
+    	final User coopter = userRepository.save(cooptation.getCoopter());
+    	when(userService.getUserWithAuthorities()).thenReturn(Optional.ofNullable(coopter));
+    	cooptationService.setUserService(userService);
+        cooptationService.save(cooptation);
+
         // As the test used the service layer, reset the Elasticsearch mock repository
         reset(mockCooptationSearchRepository);
 
@@ -281,7 +328,12 @@ public class CooptationResourceIntTest {
         em.detach(updatedCooptation);
         updatedCooptation
             .profile(UPDATED_PROFILE)
-            .performedOn(UPDATED_PERFORMED_ON);
+            .performedOn(UPDATED_PERFORMED_ON)
+            .phoneNumber(UPDATED_PHONE_NUMBER)
+            .linkedIn(UPDATED_LINKED_IN)
+            .firstName(UPDATED_FIRST_NAME)
+            .lastName(UPDATED_LAST_NAME)
+            .email(UPDATED_EMAIL);
 
         restCooptationMockMvc.perform(put("/api/cooptations")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -293,7 +345,12 @@ public class CooptationResourceIntTest {
         assertThat(cooptationList).hasSize(databaseSizeBeforeUpdate);
         Cooptation testCooptation = cooptationList.get(cooptationList.size() - 1);
         assertThat(testCooptation.getProfile()).isEqualTo(UPDATED_PROFILE);
-        assertThat(testCooptation.getPerformedOn()).isAfter(UPDATED_PERFORMED_ON);
+        assertThat(testCooptation.getPerformedOn()).isAfterOrEqualTo(UPDATED_PERFORMED_ON);
+        assertThat(testCooptation.getPhoneNumber()).isEqualTo(UPDATED_PHONE_NUMBER);
+        assertThat(testCooptation.getLinkedIn()).isEqualTo(UPDATED_LINKED_IN);
+        assertThat(testCooptation.getFirstName()).isEqualTo(UPDATED_FIRST_NAME);
+        assertThat(testCooptation.getLastName()).isEqualTo(UPDATED_LAST_NAME);
+        assertThat(testCooptation.getEmail()).isEqualTo(UPDATED_EMAIL);
 
         // Validate the Cooptation in Elasticsearch
         verify(mockCooptationSearchRepository, times(1)).save(testCooptation);
@@ -324,6 +381,9 @@ public class CooptationResourceIntTest {
     @Transactional
     public void deleteCooptation() throws Exception {
         // Initialize the database
+    	final User coopter = userRepository.save(cooptation.getCoopter());
+    	when(userService.getUserWithAuthorities()).thenReturn(Optional.ofNullable(coopter));
+    	cooptationService.setUserService(userService);
         cooptationService.save(cooptation);
 
         int databaseSizeBeforeDelete = cooptationRepository.findAll().size();
@@ -345,7 +405,10 @@ public class CooptationResourceIntTest {
     @Transactional
     public void searchCooptation() throws Exception {
         // Initialize the database
-        cooptationService.save(cooptation);
+    	when(userService.getUserWithAuthorities()).thenReturn(Optional.ofNullable(cooptation.getCoopter()));
+    	cooptationService.setUserService(userService);
+    	cooptationService.save(cooptation);
+    	
         when(mockCooptationSearchRepository.search(queryStringQuery("id:" + cooptation.getId()), PageRequest.of(0, 20)))
             .thenReturn(new PageImpl<>(Collections.singletonList(cooptation), PageRequest.of(0, 1), 1));
         // Search the cooptation
@@ -354,7 +417,12 @@ public class CooptationResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(cooptation.getId().intValue())))
             .andExpect(jsonPath("$.[*].profile").value(hasItem(DEFAULT_PROFILE.toString())))
-            .andExpect(jsonPath("$.[*].performedOn").value(hasItem(cooptation.getPerformedOn().toString())));
+            .andExpect(jsonPath("$.[*].performedOn").exists())
+            .andExpect(jsonPath("$.[*].phoneNumber").value(hasItem(DEFAULT_PHONE_NUMBER.toString())))
+            .andExpect(jsonPath("$.[*].linkedIn").value(hasItem(DEFAULT_LINKED_IN.toString())))
+            .andExpect(jsonPath("$.[*].firstName").value(hasItem(DEFAULT_FIRST_NAME.toString())))
+            .andExpect(jsonPath("$.[*].lastName").value(hasItem(DEFAULT_LAST_NAME.toString())))
+            .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL.toString())));
     }
 
     @Test

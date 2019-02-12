@@ -1,14 +1,17 @@
 import { Moment } from 'moment';
-import { ICoopted } from 'app/shared/model//coopted.model';
-import { ICoopter } from 'app/shared/model//coopter.model';
+import { IUser } from 'app/core/user/user.model';
 import { ISkill } from 'app/shared/model//skill.model';
 
 export interface ICooptation {
     id?: number;
     profile?: string;
     performedOn?: Moment;
-    coopted?: ICoopted;
-    coopter?: ICoopter;
+    phoneNumber?: string;
+    linkedIn?: string;
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    coopter?: IUser;
     skills?: ISkill[];
 }
 
@@ -17,8 +20,12 @@ export class Cooptation implements ICooptation {
         public id?: number,
         public profile?: string,
         public performedOn?: Moment,
-        public coopted?: ICoopted,
-        public coopter?: ICoopter,
+        public phoneNumber?: string,
+        public linkedIn?: string,
+        public firstName?: string,
+        public lastName?: string,
+        public email?: string,
+        public coopter?: IUser,
         public skills?: ISkill[]
     ) {}
 }

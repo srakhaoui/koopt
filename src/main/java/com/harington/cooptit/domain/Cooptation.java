@@ -32,13 +32,24 @@ public class Cooptation implements Serializable {
     @Column(name = "performed_on")
     private Instant performedOn;
 
-    @OneToOne    
-    @JoinColumn(unique = true)
-    private Coopted coopted;
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    @Column(name = "linked_in")
+    private String linkedIn;
+
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
+
+    @Column(name = "email")
+    private String email;
 
     @ManyToOne
     @JsonIgnoreProperties("")
-    private Coopter coopter;
+    private User coopter;
 
     @ManyToMany
     @JoinTable(name = "cooptation_skills",
@@ -81,30 +92,82 @@ public class Cooptation implements Serializable {
         this.performedOn = performedOn;
     }
 
-    public Coopted getCoopted() {
-        return coopted;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public Cooptation coopted(Coopted coopted) {
-        this.coopted = coopted;
+    public Cooptation phoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
         return this;
     }
 
-    public void setCoopted(Coopted coopted) {
-        this.coopted = coopted;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
-    public Coopter getCoopter() {
+    public String getLinkedIn() {
+        return linkedIn;
+    }
+
+    public Cooptation linkedIn(String linkedIn) {
+        this.linkedIn = linkedIn;
+        return this;
+    }
+
+    public void setLinkedIn(String linkedIn) {
+        this.linkedIn = linkedIn;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public Cooptation firstName(String firstName) {
+        this.firstName = firstName;
+        return this;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public Cooptation lastName(String lastName) {
+        this.lastName = lastName;
+        return this;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public Cooptation email(String email) {
+        this.email = email;
+        return this;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public User getCoopter() {
         return coopter;
     }
 
-    public Cooptation coopter(Coopter coopter) {
-        this.coopter = coopter;
+    public Cooptation coopter(User user) {
+        this.coopter = user;
         return this;
     }
 
-    public void setCoopter(Coopter coopter) {
-        this.coopter = coopter;
+    public void setCoopter(User user) {
+        this.coopter = user;
     }
 
     public Set<Skill> getSkills() {
@@ -157,6 +220,11 @@ public class Cooptation implements Serializable {
             "id=" + getId() +
             ", profile='" + getProfile() + "'" +
             ", performedOn='" + getPerformedOn() + "'" +
+            ", phoneNumber='" + getPhoneNumber() + "'" +
+            ", linkedIn='" + getLinkedIn() + "'" +
+            ", firstName='" + getFirstName() + "'" +
+            ", lastName='" + getLastName() + "'" +
+            ", email='" + getEmail() + "'" +
             "}";
     }
 }

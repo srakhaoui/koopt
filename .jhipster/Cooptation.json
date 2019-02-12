@@ -8,21 +8,33 @@
         {
             "fieldName": "performedOn",
             "fieldType": "Instant"
+        },
+		{
+            "fieldName": "phoneNumber",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "linkedIn",
+            "fieldType": "String"
+        },
+		{
+            "fieldName": "firstName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "lastName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "email",
+            "fieldType": "String"
         }
     ],
     "relationships": [
         {
-            "relationshipType": "one-to-one",
-            "relationshipName": "coopted",
-            "otherEntityName": "coopted",
-            "otherEntityField": "id",
-            "ownerSide": true,
-            "otherEntityRelationshipName": "cooptation"
-        },
-        {
             "relationshipType": "many-to-one",
             "relationshipName": "coopter",
-            "otherEntityName": "coopter",
+            "otherEntityName": "user",
             "otherEntityField": "id"
         },
         {

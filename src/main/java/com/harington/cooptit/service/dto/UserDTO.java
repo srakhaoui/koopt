@@ -34,6 +34,9 @@ public class UserDTO {
     @Email
     @Size(min = 5, max = 254)
     private String email;
+    
+    @Size(max = 20)
+    private String phoneNumber;
 
     @Size(max = 256)
     private String imageUrl;
@@ -115,7 +118,15 @@ public class UserDTO {
         this.email = email;
     }
 
-    public String getImageUrl() {
+    public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public String getImageUrl() {
         return imageUrl;
     }
 

@@ -25,7 +25,7 @@ describe('Service Tests', () => {
             httpMock = injector.get(HttpTestingController);
             currentDate = moment();
 
-            elemDefault = new Cooptation(0, 'AAAAAAA', currentDate);
+            elemDefault = new Cooptation(0, 'AAAAAAA', currentDate, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA');
         });
 
         describe('Service methods', async () => {
@@ -71,7 +71,12 @@ describe('Service Tests', () => {
                 const returnedFromService = Object.assign(
                     {
                         profile: 'BBBBBB',
-                        performedOn: currentDate.format(DATE_TIME_FORMAT)
+                        performedOn: currentDate.format(DATE_TIME_FORMAT),
+                        phoneNumber: 'BBBBBB',
+                        linkedIn: 'BBBBBB',
+                        firstName: 'BBBBBB',
+                        lastName: 'BBBBBB',
+                        email: 'BBBBBB'
                     },
                     elemDefault
                 );
@@ -94,7 +99,12 @@ describe('Service Tests', () => {
                 const returnedFromService = Object.assign(
                     {
                         profile: 'BBBBBB',
-                        performedOn: currentDate.format(DATE_TIME_FORMAT)
+                        performedOn: currentDate.format(DATE_TIME_FORMAT),
+                        phoneNumber: 'BBBBBB',
+                        linkedIn: 'BBBBBB',
+                        firstName: 'BBBBBB',
+                        lastName: 'BBBBBB',
+                        email: 'BBBBBB'
                     },
                     elemDefault
                 );
@@ -106,7 +116,10 @@ describe('Service Tests', () => {
                 );
                 service
                     .query(expected)
-                    .pipe(take(1), map(resp => resp.body))
+                    .pipe(
+                        take(1),
+                        map(resp => resp.body)
+                    )
                     .subscribe(body => expect(body).toContainEqual(expected));
                 const req = httpMock.expectOne({ method: 'GET' });
                 req.flush(JSON.stringify([returnedFromService]));
