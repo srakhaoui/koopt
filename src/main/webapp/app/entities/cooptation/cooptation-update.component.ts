@@ -1,8 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy  } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Subject, Observable, of, concat } from 'rxjs';
-import {catchError, debounceTime, distinctUntilChanged, map, tap, switchMap} from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, map, tap, switchMap } from 'rxjs/operators';
 import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { JhiAlertService } from 'ng-jhipster';
@@ -85,23 +85,23 @@ export class CooptationUpdateComponent implements OnInit {
             }
         }
         return option;
-   }
-    
-   private loadSkills() {
+    }
+
+    private loadSkills() {
         this.skills$ = concat(
             of([]), // default items
             this.skillsInput$.pipe(
                 debounceTime(300),
                 distinctUntilChanged(),
-                tap(() => this.skillsLoading = true),
+                tap(() => (this.skillsLoading = true)),
                 switchMap(term =>
-                    this.skillService.suggest({
-                        prefix: term
-                    }).pipe(
-                        catchError(() => of([])),
-                        map((resp: HttpResponse<ISkill[]>) => resp.body))
+                    this.skillService
+                        .suggest({
+                            prefix: term
+                        })
+                        .pipe(catchError(() => of([])), map((resp: HttpResponse<ISkill[]>) => resp.body))
                 ),
-                tap(() => this.skillsLoading = false)
+                tap(() => (this.skillsLoading = false))
             )
         );
     }
