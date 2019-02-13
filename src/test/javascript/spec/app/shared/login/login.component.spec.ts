@@ -114,7 +114,7 @@ describe('Component Tests', () => {
                     expect(mockLoginService.loginSpy).toHaveBeenCalledWith(credentials);
                     expect(mockStateStorageService.getUrlSpy).toHaveBeenCalledTimes(1);
                     expect(mockStateStorageService.storeUrlSpy).not.toHaveBeenCalled();
-                    //TODO: fix me expect(mockRouter.navigateSpy).not.toHaveBeenCalled();
+                    // TODO: fix me expect(mockRouter.navigateSpy).not.toHaveBeenCalled();
                 })
             )
         );
