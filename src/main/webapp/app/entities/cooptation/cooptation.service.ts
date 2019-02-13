@@ -63,16 +63,18 @@ export class CooptationService {
             performedOn: cooptation.performedOn != null && cooptation.performedOn.isValid() ? cooptation.performedOn.toJSON() : null
         });
         const skills: Array<ISkill> = [];
-        copy.skills.forEach(skill => {
-            if (typeof skill === 'string') {
-                skills.push({ code: (<string>skill).trim(), label: skill });
-            } else {
-                if (skill.id === undefined && skill.label != null) {
-                    skill.code = skill.label.replace(' ', '');
+        if (copy.skills !== undefined) {
+            for (const skill of copy.skills) {
+                if (typeof skill === 'string') {
+                    skills.push({ code: (<string>skill).trim(), label: skill });
+                } else {
+                    if (skill.id === undefined && skill.label != null) {
+                        skill.code = skill.label.replace(' ', '');
+                    }
+                    skills.push(skill);
                 }
-                skills.push(skill);
             }
-        });
+        }
         copy.skills = skills;
         return copy;
     }
